@@ -37,7 +37,7 @@ In this mini project we're going to implement from scratch a one-vs-all logistic
 
 ## Download the MNIST dataset
 
-[https://drive.google.com/file/d/1lyP8UkVxEFm6cAhjYXwRUP3k3n0ddTgD/view?usp=sharing](MNIST digits dataset)
+[MNIST digits dataset](https://drive.google.com/file/d/1lyP8UkVxEFm6cAhjYXwRUP3k3n0ddTgD/view?usp=sharing)
 
 ```
 gdown 1lyP8UkVxEFm6cAhjYXwRUP3k3n0ddTgD
