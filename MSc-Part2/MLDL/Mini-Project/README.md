@@ -2,6 +2,8 @@
 
 In this mini project we're going to implement from scratch a one-vs-all logistic regression classifier for the [MNIST digits dataset](https://drive.google.com/file/d/1lyP8UkVxEFm6cAhjYXwRUP3k3n0ddTgD/view?usp=sharing) with a neural network mindset. The neural network aspect of this implementation is the use of a forward and backward propagation to claculate the value of the cost function and the partial derivatives of the cost function with respect to weights and the bias.
 
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1GkOTH8IbZbztvEqZ_rMvUi1EwhCzNjZ_?usp=sharing)
+
 >[Mini-Project: Handwritten digit classifier using logistic regression.](#scrollTo=BTdQN8rF204b)
 
 >>[Introduction](#scrollTo=waUX8T1T204d)
@@ -45,5 +47,7 @@ unzip -qq mnist-original.mat.zip
 ```
 
 ## Results
-
-<img src="metadta/output_video.gif" width="600"/>"
+- GIF
+<div id='results', align=center>
+  <img src="metadata/output_video.gif" width="600"/>
+</div>
