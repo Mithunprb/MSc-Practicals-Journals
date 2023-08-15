@@ -24,6 +24,18 @@ In this mini project we're going to implement from scratch a one-vs-all logistic
 
 >>[Conclusion](#scrollTo=USR22VSD_M87)
 
+```
+.
+└── Mini-Project
+    ├── 509_Mithun_Parab_MLDL_mini_project.ipynb
+    ├── LaTeX
+    ├── README.md
+    ├── metadata
+    └── pdf
+
+4 directories, 2 files
+```
+
 ## Requirements
 
 - Gdown
