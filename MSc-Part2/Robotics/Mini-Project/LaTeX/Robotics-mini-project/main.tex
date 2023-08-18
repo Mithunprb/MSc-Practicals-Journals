@@ -1,0 +1,183 @@
+\documentclass{article}
+
+%%%%%%% PACKAGES %%%%%%%%
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\usepackage{blindtext}
+\usepackage{setspace}
+\usepackage{hyperref}
+\usepackage{notoccite} %citation number ordering
+\usepackage{lscape} %landscape table
+\usepackage{caption} %add a newline in the table caption
+%for helloworld
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{listings}
+\usepackage{graphics}
+\usepackage{textcomp}
+\usepackage{graphicx}
+\usepackage[rightcaption]{sidecap}
+\usepackage{minted}
+\usepackage{fullpage,enumitem,amsmath,amssymb}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{listings}
+\usepackage{graphics}
+\usepackage{graphicx}
+\usepackage[rightcaption]{sidecap}
+\usepackage{tcolorbox}
+\usepackage{textcomp}
+\usepackage{hyperref}
+\usepackage{minted}
+\usepackage{xcolor}
+\usepackage{caption}
+
+\usepackage{tikz}
+\usepackage{blindtext}
+\usepackage{float} 
+\usepackage{enumitem}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{listings}
+\usepackage{graphics}
+\usepackage{graphicx}
+\usepackage[rightcaption]{sidecap}
+\usepackage{minted}
+
+\DeclareUnicodeCharacter{025B}{\ensuremath{\varepsilon}}
+\DeclareUnicodeCharacter{03F5}{\ensuremath{\epsilon}}
+\DeclareUnicodeCharacter{03B5}{\ensuremath{\varepsilon}}
+
+\newcommand{\MYhref}[3][blue]{\href{#2}{\color{#1}{#3}}}%
+\hypersetup{%
+  colorlinks=true,
+  linkcolor=blue,
+  linkbordercolor={1 1 1}
+}
+\usepackage[
+backend=biber,  %references format (IEEE)
+style=ieee,
+sorting=none
+]{biblatex}
+
+\addbibresource{refs.bib} %rename this to your own bibliography
+\onehalfspace   % 1.5 line spacing
+
+
+\newenvironment{code}{\captionsetup{type=listing}}{}
+\usepackage{ifnextok}
+\usepackage{xcolor}
+\makeatletter
+\def\tilblank#1{#1\IfNextToken\@sptoken{ \color{black}}{%
+  \IfNextToken\egroup{}{\tilblank}}}
+\def\atend{\IfNextToken\@sptoken{ \color{black}}\tilblank}
+\let\svat @
+\makeatother
+\catcode`@=\active
+\def@{\color{orange}\svat\atend}
+
+\usepackage[
+  separate-uncertainty = true,
+  multi-part-units = repeat
+]{siunitx}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  linkbordercolor={0 0 1}
+}
+
+
+% \newcommand{\href}[3][blue]{\href{#2}{\color{#1}{#3}}}%
+% \hypersetup{%
+%   colorlinks=true,
+%   linkcolor=blue,
+%   linkbordercolor={0 0 1}
+% }
+\usepackage{minted}
+\usepackage{mdframed}
+\definecolor{bg}{rgb}{0.95,0.95,0.95}
+\usepackage[
+backend=biber,  %references format (IEEE)
+style=ieee,
+sorting=none
+]{biblatex}
+\addbibresource{refs.bib} %rename this to your own bibliography
+\onehalfspace   % 1.5 line spacing
+\usemintedstyle{monokai}
+\definecolor{bg}{HTML}{282828}
+
+
+\title{\huge{\textbf{ Robotics Assignment}} \\
+\LARGE{M.Sc Part II Computer Science}}
+\author{Mithun Parab 509}
+
+
+\begin{document}
+\pagenumbering{roman} % Start roman numbering
+\clearpage\maketitle
+\thispagestyle{empty}
+\begin{center}
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=7cm]{images/RJCLG.png}
+        %\caption{Your caption here}
+        \label{fig:logo}
+    \end{figure}
+
+    \large{R.J. College of Arts, Science \& Commerce \\
+    Robotics\\
+    % Supervisor: Mrs. Tejaswee Pol \\
+    Seat number: 509
+    }
+\end{center}
+\newpage
+% \include{certificate}
+% \newpage
+%\setcounter{page}{1}
+
+% \tableofcontents
+% \listoffigures
+% \listoftables
+
+\newpage
+\tableofcontents
+\listoffigures
+% \listoftables
+\newpage
+\pagenumbering{arabic} % Start roman numbering
+
+%%% CONTENT HERE %%%%
+
+
+    % \include{helloworld}
+    % \input{Gcommand1}
+    % \newpage
+    % \input{Netcommand2}
+    % \newpage
+    % \input{SSH3}
+    % \newpage
+    % \input{Samba4}
+    % \newpage
+    % \input{Advance_shell_script5}
+    % \newpage
+    % \input{DNS6}
+    % \newpage
+    % \input{DHCP7}
+    % \newpage
+    % \input{MySQL8}
+    % \newpage
+    % \input{phpmyadmin9}
+    
+% \begin{center}
+%     Code on \href{https://github.com/Rajprb/StockPrice_Prediction/blob/best_fit_line/Data_Science_Journal.ipynb}{github} and Code on \href{https://colab.research.google.com/drive/1h4_rse0R-r_oCczyVGYzIf-qlXaz05n3?usp=sharing}{Google colab} 
+% \end{center}
+\newpage
+\input{robotics-mini-project}
+\end{document}
+
+\setstretch{1} 
+%reduce bibliography line spacing
+\printbibliography
+\end{document}
