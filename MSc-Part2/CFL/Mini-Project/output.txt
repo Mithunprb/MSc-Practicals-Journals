@@ -1,0 +1,22 @@
+Script started on Sun Sep  3 08:34:52 2023
+[1m[7m%[27m[1m[0m                                                                                          ]7;file://Nightfury16.local/Users/mithunparab/Downloads/Code/github/MSc-Practicals-Journals/MSc-Part2/CFL/Mini-Project[0m[27m[24m[J[1m[K[38;5;166mmithunparab[38;5;228m@Nightfury16[38;5;34m~/Downloads/Code/github/MSc-Practicals-Journals/MSc-Part2/CFL/Mini-Project% (B[m[K[?2004hppython -m keg ylogger[?2004l
+Key.cmd_r
+Key.cmd_r
+'c'
+Key.cmd_r
+Key.cmd_r
+Key.cmd_r
+'v'
+Combininghumanbodymodelswithdifferentiablerendering has recently enabled animatable avatars of clothed humans from sparse sets of multi-view RGB videos. While state-of-the-art approaches achieve a realistic appearance with neural radiance fields (NeRF), the inferred geometry often lacks detail due to missing geometric constraints. Fur- ther, animating avatars in out-of-distribution poses is not yet possible because the mapping from observation space to canonical space does not generalize faithfully to unseen poses. In this work, we address these shortcomings and propose a model to create animatable clothed human avatars with detailed geometry that generalize well to out-of-distribution poses. To achieve detailed geometry, we combine an articulated implicit surface representation with volume rendering. For generalization, we pro- pose a novel joint root-finding algorithm for simultaneous ray-surface intersection search and correspondence search.Key.enter
+
+[1m[7m%[27m[1m[0m                                                                                          ]7;file://Nightfury16.local/Users/mithunparab/Downloads/Code/github/MSc-Practicals-Journals/MSc-Part2/CFL/Mini-Project[0m[27m[24m[J[1m[K[38;5;166mmithunparab[38;5;228m@Nightfury16[38;5;34m~/Downloads/Code/github/MSc-Practicals-Journals/MSc-Part2/CFL/Mini-Project% (B[m[K[?2004h[?2004l
+[1m[7m%[27m[1m[0m                                                                                          ]7;file://Nightfury16.local/Users/mithunparab/Downloads/Code/github/MSc-Practicals-Journals/MSc-Part2/CFL/Mini-Project[0m[27m[24m[J[1m[K[38;5;166mmithunparab[38;5;228m@Nightfury16[38;5;34m~/Downloads/Code/github/MSc-Practicals-Journals/MSc-Part2/CFL/Mini-Project% (B[m[K[?2004hccat keylogs.txt[?2004l
+hereweKey.spacegoKey.ctrlcKey.cmd_rKey.cmd_rcKey.cmd_rKey.cmd_rKey.cmd_rvKey.enter[1m[7m%[27m[1m[0m                                                                                          ]7;file://Nightfury16.local/Users/mithunparab/Downloads/Code/github/MSc-Practicals-Journals/MSc-Part2/CFL/Mini-Project[0m[27m[24m[J[1m[K[38;5;166mmithunparab[38;5;228m@Nightfury16[38;5;34m~/Downloads/Code/github/MSc-Practicals-Journals/MSc-Part2/CFL/Mini-Project% (B[m[K[?2004h[?2004l
+[1m[7m%[27m[1m[0m                                                                                          ]7;file://Nightfury16.local/Users/mithunparab/Downloads/Code/github/MSc-Practicals-Journals/MSc-Part2/CFL/Mini-Project[0m[27m[24m[J[1m[K[38;5;166mmithunparab[38;5;228m@Nightfury16[38;5;34m~/Downloads/Code/github/MSc-Practicals-Journals/MSc-Part2/CFL/Mini-Project% (B[m[K[?2004h[?2004l
+
+Saving session...
+...copying shared history...
+...saving history...truncating history files...
+...completed.
+
+Script done on Sun Sep  3 08:36:39 2023
