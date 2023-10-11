@@ -1,0 +1,4667 @@
+\documentclass[11pt]{article}
+
+    \usepackage[breakable]{tcolorbox}
+    \usepackage{parskip} % Stop auto-indenting (to mimic markdown behaviour)
+    \usepackage{tikz}
+    
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % Maintain compatibility with old templates. Remove in nbconvert 6.0
+    \let\Oldincludegraphics\includegraphics
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionFormat{nocaption}{}
+    \captionsetup{format=nocaption,aboveskip=0pt,belowskip=0pt}
+
+    \usepackage{float}
+    \floatplacement{figure}{H} % forces figures to be placed at the correct location
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+
+    \usepackage{iftex}
+    \ifPDFTeX
+        \usepackage[T1]{fontenc}
+        \IfFileExists{alphabeta.sty}{
+              \usepackage{alphabeta}
+          }{
+              \usepackage[mathletters]{ucs}
+              \usepackage[utf8x]{inputenc}
+          }
+    \else
+        \usepackage{fontspec}
+        \usepackage{unicode-math}
+    \fi
+
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics 
+                         % to support a larger range
+    \makeatletter % fix for old versions of grffile with XeLaTeX
+    \@ifpackagelater{grffile}{2019/11/01}
+    {
+      % Do nothing on new versions
+    }
+    {
+      \def\Gread@@xetex#1{%
+        \IfFileExists{"\Gin@base".bb}%
+        {\Gread@eps{\Gin@base.bb}}%
+        {\Gread@@xetex@aux#1}%
+      }
+    }
+    \makeatother
+    \usepackage[Export]{adjustbox} % Used to constrain images to a maximum size
+    \adjustboxset{max size={0.9\linewidth}{0.9\paperheight}}
+
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    % The default LaTeX title has an obnoxious amount of whitespace. By default,
+    % titling removes some of it. It also provides customization options.
+    \usepackage{titling}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage{array}     % table support for pandoc >= 2.11.3
+    \usepackage{calc}      % table minipage width calculation for pandoc >= 2.11.1
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    \usepackage{mathrsfs}
+    
+
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+    \definecolor{ansi-default-inverse-fg}{HTML}{FFFFFF}
+    \definecolor{ansi-default-inverse-bg}{HTML}{000000}
+
+    % common color for the border for error outputs.
+    \definecolor{outerrorbackground}{HTML}{FFDFDF}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+    
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    
+    
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatibility definitions
+    \def\gt{>}
+    \def\lt{<}
+    \let\Oldtex\TeX
+    \let\Oldlatex\LaTeX
+    \renewcommand{\TeX}{\textrm{\Oldtex}}
+    \renewcommand{\LaTeX}{\textrm{\Oldlatex}}
+    % Document parameters
+    % Document title
+    % \title{MLDL\_Journal}
+    
+    
+    
+    
+    
+% Pygments definitions
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\@namedef{PY@tok@w}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\@namedef{PY@tok@c}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cp}{\def\PY@tc##1{\textcolor[rgb]{0.61,0.40,0.00}{##1}}}
+\@namedef{PY@tok@k}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kt}{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\@namedef{PY@tok@o}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ow}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@nb}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nf}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@ne}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.80,0.25,0.22}{##1}}}
+\@namedef{PY@tok@nv}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@no}{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\@namedef{PY@tok@nl}{\def\PY@tc##1{\textcolor[rgb]{0.46,0.46,0.00}{##1}}}
+\@namedef{PY@tok@ni}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.44,0.44,0.44}{##1}}}
+\@namedef{PY@tok@na}{\def\PY@tc##1{\textcolor[rgb]{0.41,0.47,0.13}{##1}}}
+\@namedef{PY@tok@nt}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nd}{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@s}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sd}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@si}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.64,0.35,0.47}{##1}}}
+\@namedef{PY@tok@se}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.36,0.12}{##1}}}
+\@namedef{PY@tok@sr}{\def\PY@tc##1{\textcolor[rgb]{0.64,0.35,0.47}{##1}}}
+\@namedef{PY@tok@ss}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sx}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@m}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@gh}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gu}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gd}{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\@namedef{PY@tok@gi}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.52,0.00}{##1}}}
+\@namedef{PY@tok@gr}{\def\PY@tc##1{\textcolor[rgb]{0.89,0.00,0.00}{##1}}}
+\@namedef{PY@tok@ge}{\let\PY@it=\textit}
+\@namedef{PY@tok@gs}{\let\PY@bf=\textbf}
+\@namedef{PY@tok@gp}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@go}{\def\PY@tc##1{\textcolor[rgb]{0.44,0.44,0.44}{##1}}}
+\@namedef{PY@tok@gt}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\@namedef{PY@tok@err}{\def\PY@bc##1{{\setlength{\fboxsep}{\string -\fboxrule}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}}
+\@namedef{PY@tok@kc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kd}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kr}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@bp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@fm}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@vc}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vg}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vi}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vm}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sa}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sb}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sc}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@dl}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s2}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sh}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s1}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@mb}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mf}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mh}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mi}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@il}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mo}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ch}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cm}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cpf}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@c1}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cs}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % For linebreaks inside Verbatim environment from package fancyvrb. 
+    \makeatletter
+        \newbox\Wrappedcontinuationbox 
+        \newbox\Wrappedvisiblespacebox 
+        \newcommand*\Wrappedvisiblespace {\textcolor{red}{\textvisiblespace}} 
+        \newcommand*\Wrappedcontinuationsymbol {\textcolor{red}{\llap{\tiny$\m@th\hookrightarrow$}}} 
+        \newcommand*\Wrappedcontinuationindent {3ex } 
+        \newcommand*\Wrappedafterbreak {\kern\Wrappedcontinuationindent\copy\Wrappedcontinuationbox} 
+        % Take advantage of the already applied Pygments mark-up to insert 
+        % potential linebreaks for TeX processing. 
+        %        {, <, #, %, $, ' and ": go to next line. 
+        %        _, }, ^, &, >, - and ~: stay at end of broken line. 
+        % Use of \textquotesingle for straight quote. 
+        \newcommand*\Wrappedbreaksatspecials {% 
+            \def\PYGZus{\discretionary{\char`\_}{\Wrappedafterbreak}{\char`\_}}% 
+            \def\PYGZob{\discretionary{}{\Wrappedafterbreak\char`\{}{\char`\{}}% 
+            \def\PYGZcb{\discretionary{\char`\}}{\Wrappedafterbreak}{\char`\}}}% 
+            \def\PYGZca{\discretionary{\char`\^}{\Wrappedafterbreak}{\char`\^}}% 
+            \def\PYGZam{\discretionary{\char`\&}{\Wrappedafterbreak}{\char`\&}}% 
+            \def\PYGZlt{\discretionary{}{\Wrappedafterbreak\char`\<}{\char`\<}}% 
+            \def\PYGZgt{\discretionary{\char`\>}{\Wrappedafterbreak}{\char`\>}}% 
+            \def\PYGZsh{\discretionary{}{\Wrappedafterbreak\char`\#}{\char`\#}}% 
+            \def\PYGZpc{\discretionary{}{\Wrappedafterbreak\char`\%}{\char`\%}}% 
+            \def\PYGZdl{\discretionary{}{\Wrappedafterbreak\char`\$}{\char`\$}}% 
+            \def\PYGZhy{\discretionary{\char`\-}{\Wrappedafterbreak}{\char`\-}}% 
+            \def\PYGZsq{\discretionary{}{\Wrappedafterbreak\textquotesingle}{\textquotesingle}}% 
+            \def\PYGZdq{\discretionary{}{\Wrappedafterbreak\char`\"}{\char`\"}}% 
+            \def\PYGZti{\discretionary{\char`\~}{\Wrappedafterbreak}{\char`\~}}% 
+        } 
+        % Some characters . , ; ? ! / are not pygmentized. 
+        % This macro makes them "active" and they will insert potential linebreaks 
+        \newcommand*\Wrappedbreaksatpunct {% 
+            \lccode`\~`\.\lowercase{\def~}{\discretionary{\hbox{\char`\.}}{\Wrappedafterbreak}{\hbox{\char`\.}}}% 
+            \lccode`\~`\,\lowercase{\def~}{\discretionary{\hbox{\char`\,}}{\Wrappedafterbreak}{\hbox{\char`\,}}}% 
+            \lccode`\~`\;\lowercase{\def~}{\discretionary{\hbox{\char`\;}}{\Wrappedafterbreak}{\hbox{\char`\;}}}% 
+            \lccode`\~`\:\lowercase{\def~}{\discretionary{\hbox{\char`\:}}{\Wrappedafterbreak}{\hbox{\char`\:}}}% 
+            \lccode`\~`\?\lowercase{\def~}{\discretionary{\hbox{\char`\?}}{\Wrappedafterbreak}{\hbox{\char`\?}}}% 
+            \lccode`\~`\!\lowercase{\def~}{\discretionary{\hbox{\char`\!}}{\Wrappedafterbreak}{\hbox{\char`\!}}}% 
+            \lccode`\~`\/\lowercase{\def~}{\discretionary{\hbox{\char`\/}}{\Wrappedafterbreak}{\hbox{\char`\/}}}% 
+            \catcode`\.\active
+            \catcode`\,\active 
+            \catcode`\;\active
+            \catcode`\:\active
+            \catcode`\?\active
+            \catcode`\!\active
+            \catcode`\/\active 
+            \lccode`\~`\~ 	
+        }
+    \makeatother
+
+    \let\OriginalVerbatim=\Verbatim
+    \makeatletter
+    \renewcommand{\Verbatim}[1][1]{%
+        %\parskip\z@skip
+        \sbox\Wrappedcontinuationbox {\Wrappedcontinuationsymbol}%
+        \sbox\Wrappedvisiblespacebox {\FV@SetupFont\Wrappedvisiblespace}%
+        \def\FancyVerbFormatLine ##1{\hsize\linewidth
+            \vtop{\raggedright\hyphenpenalty\z@\exhyphenpenalty\z@
+                \doublehyphendemerits\z@\finalhyphendemerits\z@
+                \strut ##1\strut}%
+        }%
+        % If the linebreak is at a space, the latter will be displayed as visible
+        % space at end of first line, and a continuation symbol starts next line.
+        % Stretch/shrink are however usually zero for typewriter font.
+        \def\FV@Space {%
+            \nobreak\hskip\z@ plus\fontdimen3\font minus\fontdimen4\font
+            \discretionary{\copy\Wrappedvisiblespacebox}{\Wrappedafterbreak}
+            {\kern\fontdimen2\font}%
+        }%
+        
+        % Allow breaks at special characters using \PYG... macros.
+        \Wrappedbreaksatspecials
+        % Breaks at punctuation characters . , ; ? ! and / need catcode=\active 	
+        \OriginalVerbatim[#1,codes*=\Wrappedbreaksatpunct]%
+    }
+    \makeatother
+
+    % Exact colors from NB
+    \definecolor{incolor}{HTML}{303F9F}
+    \definecolor{outcolor}{HTML}{D84315}
+    \definecolor{cellborder}{HTML}{CFCFCF}
+    \definecolor{cellbackground}{HTML}{F7F7F7}
+    
+    % prompt
+    \makeatletter
+    \newcommand{\boxspacing}{\kern\kvtcb@left@rule\kern\kvtcb@boxsep}
+    \makeatother
+    \newcommand{\prompt}[4]{
+        {\ttfamily\llap{{\color{#2}[#3]:\hspace{3pt}#4}}\vspace{-\baselineskip}}
+    }
+    
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy 
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+     \title{\huge{\textbf{ Machine leraning \& Deep learning Journal}} \\
+    \LARGE{M.Sc Part II Computer Science}}
+    \author{Mithun Parab 509} 
+
+\begin{document}
+    
+    % \maketitle
+    \pagenumbering{roman} % Start roman numbering
+\clearpage\maketitle
+\thispagestyle{empty}
+\begin{center}
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=7cm]{RJCLG.png}
+        %\caption{Your caption here}
+        \label{fig:logo}
+    \end{figure}
+
+    \large{R.J. College of Arts, Science \& Commerce \\
+    Machine learning \& Deep learning \\
+    Seat number: 509
+    }
+\end{center}
+\newpage
+\include{certificate}
+\newpage
+\tableofcontents
+\begin{center}
+    Link for \href{https://github.com/Mithunprb/MSc-Practicals-Journals/tree/main/MSc-Part2/MLDL/Practicals}{GitHub}
+\end{center}
+\newpage
+\pagenumbering{arabic} % Start roman numbering
+    
+
+    
+    \section{Practical 01: Implement Simple Linear
+Regression}\label{practical-01-implement-simple-linear-regression}
+
+    \subsection{Importing the libraries}\label{importing-the-libraries}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{2}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+\PY{k+kn}{import} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k}{as} \PY{n+nn}{plt}
+\PY{k+kn}{import} \PY{n+nn}{pandas} \PY{k}{as} \PY{n+nn}{pd}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \subsection{Importing the dataset}\label{importing-the-dataset}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{3}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{dataset} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{/content/drive/MyDrive/MSC CS/SEM 3/1. Machine Learning \PYZam{} Deep Learning/Practicals/1. Simple Linear Regression/Salary\PYZus{}Data.csv}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{X} \PY{o}{=} \PY{n}{dataset}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{p}{:}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{.}\PY{n}{values}
+\PY{n}{y} \PY{o}{=} \PY{n}{dataset}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{.}\PY{n}{values}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{4}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{X}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[[ 1.1]
+ [ 1.3]
+ [ 1.5]
+ [ 2. ]
+ [ 2.2]
+ [ 2.9]
+ [ 3. ]
+ [ 3.2]
+ [ 3.2]
+ [ 3.7]
+ [ 3.9]
+ [ 4. ]
+ [ 4. ]
+ [ 4.1]
+ [ 4.5]
+ [ 4.9]
+ [ 5.1]
+ [ 5.3]
+ [ 5.9]
+ [ 6. ]
+ [ 6.8]
+ [ 7.1]
+ [ 7.9]
+ [ 8.2]
+ [ 8.7]
+ [ 9. ]
+ [ 9.5]
+ [ 9.6]
+ [10.3]
+ [10.5]]
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{5}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{y}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[ 39343.  46205.  37731.  43525.  39891.  56642.  60150.  54445.  64445.
+  57189.  63218.  55794.  56957.  57081.  61111.  67938.  66029.  83088.
+  81363.  93940.  91738.  98273. 101302. 113812. 109431. 105582. 116969.
+ 112635. 122391. 121872.]
+    \end{Verbatim}
+
+    \subsection{Splitting the dataset into the Training set and Test
+set}\label{splitting-the-dataset-into-the-training-set-and-test-set}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{6}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{model\PYZus{}selection} \PY{k+kn}{import} \PY{n}{train\PYZus{}test\PYZus{}split}
+\PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{X\PYZus{}test}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}test} \PY{o}{=} \PY{n}{train\PYZus{}test\PYZus{}split}\PY{p}{(}\PY{n}{X}\PY{p}{,} \PY{n}{y}\PY{p}{,} \PY{n}{test\PYZus{}size} \PY{o}{=} \PY{l+m+mi}{1}\PY{o}{/}\PY{l+m+mi}{3}\PY{p}{,} \PY{n}{random\PYZus{}state} \PY{o}{=} \PY{l+m+mi}{0}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{7}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{X\PYZus{}train}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[[ 2.9]
+ [ 5.1]
+ [ 3.2]
+ [ 4.5]
+ [ 8.2]
+ [ 6.8]
+ [ 1.3]
+ [10.5]
+ [ 3. ]
+ [ 2.2]
+ [ 5.9]
+ [ 6. ]
+ [ 3.7]
+ [ 3.2]
+ [ 9. ]
+ [ 2. ]
+ [ 1.1]
+ [ 7.1]
+ [ 4.9]
+ [ 4. ]]
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{8}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{X\PYZus{}test}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[[ 1.5]
+ [10.3]
+ [ 4.1]
+ [ 3.9]
+ [ 9.5]
+ [ 8.7]
+ [ 9.6]
+ [ 4. ]
+ [ 5.3]
+ [ 7.9]]
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{9}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{y\PYZus{}train}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[ 56642.  66029.  64445.  61111. 113812.  91738.  46205. 121872.  60150.
+  39891.  81363.  93940.  57189.  54445. 105582.  43525.  39343.  98273.
+  67938.  56957.]
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{10}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{y\PYZus{}test}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[ 37731. 122391.  57081.  63218. 116969. 109431. 112635.  55794.  83088.
+ 101302.]
+    \end{Verbatim}
+
+    \subsection{Training the Simple Linear Regression model on the Training
+set}\label{training-the-simple-linear-regression-model-on-the-training-set}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{11}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{linear\PYZus{}model} \PY{k+kn}{import} \PY{n}{LinearRegression}
+\PY{n}{regressor} \PY{o}{=} \PY{n}{LinearRegression}\PY{p}{(}\PY{p}{)}
+\PY{n}{regressor}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{11}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+LinearRegression()
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \subsection{Predicting the Test set
+results}\label{predicting-the-test-set-results}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{12}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{y\PYZus{}pred} \PY{o}{=} \PY{n}{regressor}\PY{o}{.}\PY{n}{predict}\PY{p}{(}\PY{n}{X\PYZus{}test}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \subsection{Visualising the Training set
+results}\label{visualising-the-training-set-results}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{13}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{plt}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{,} \PY{n}{color} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{red}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{regressor}\PY{o}{.}\PY{n}{predict}\PY{p}{(}\PY{n}{X\PYZus{}train}\PY{p}{)}\PY{p}{,} \PY{n}{color} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{blue}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Salary vs Experience (Training set)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Years of Experience}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Salary}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_18_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \subsection{Visualising the Test set
+results}\label{visualising-the-test-set-results}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{14}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{plt}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{n}{X\PYZus{}test}\PY{p}{,} \PY{n}{y\PYZus{}test}\PY{p}{,} \PY{n}{color} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{red}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{X\PYZus{}test}\PY{p}{,} \PY{n}{regressor}\PY{o}{.}\PY{n}{predict}\PY{p}{(}\PY{n}{X\PYZus{}test}\PY{p}{)}\PY{p}{,} \PY{n}{color} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{blue}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Salary vs Experience (Test set)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Years of Experience}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Salary}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_20_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \section{Practical 02: Implement Multiple Linear
+Regression}\label{practical-02-implement-multiple-linear-regression}
+
+    \subsection{Importing the libraries}\label{importing-the-libraries}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{2}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+\PY{k+kn}{import} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k}{as} \PY{n+nn}{plt}
+\PY{k+kn}{import} \PY{n+nn}{pandas} \PY{k}{as} \PY{n+nn}{pd}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \subsection{Importing the dataset}\label{importing-the-dataset}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{3}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{dataset} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{/content/drive/MyDrive/MSC CS/SEM 3/1. Machine Learning \PYZam{} Deep Learning/Practicals/2. Multiple Linear Regression/50\PYZus{}Startups\PYZhy{}2.csv}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{X} \PY{o}{=} \PY{n}{dataset}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{p}{:}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{.}\PY{n}{values}
+\PY{n}{y} \PY{o}{=} \PY{n}{dataset}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{.}\PY{n}{values}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{4}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{X}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[[165349.2 136897.8 471784.1 'New York']
+ [162597.7 151377.59 443898.53 'California']
+ [153441.51 101145.55 407934.54 'Florida']
+ [144372.41 118671.85 383199.62 'New York']
+ [142107.34 91391.77 366168.42 'Florida']
+ [131876.9 99814.71 362861.36 'New York']
+ [134615.46 147198.87 127716.82 'California']
+ [130298.13 145530.06 323876.68 'Florida']
+ [120542.52 148718.95 311613.29 'New York']
+ [123334.88 108679.17 304981.62 'California']
+ [101913.08 110594.11 229160.95 'Florida']
+ [100671.96 91790.61 249744.55 'California']
+ [93863.75 127320.38 249839.44 'Florida']
+ [91992.39 135495.07 252664.93 'California']
+ [119943.24 156547.42 256512.92 'Florida']
+ [114523.61 122616.84 261776.23 'New York']
+ [78013.11 121597.55 264346.06 'California']
+ [94657.16 145077.58 282574.31 'New York']
+ [91749.16 114175.79 294919.57 'Florida']
+ [86419.7 153514.11 0.0 'New York']
+ [76253.86 113867.3 298664.47 'California']
+ [78389.47 153773.43 299737.29 'New York']
+ [73994.56 122782.75 303319.26 'Florida']
+ [67532.53 105751.03 304768.73 'Florida']
+ [77044.01 99281.34 140574.81 'New York']
+ [64664.71 139553.16 137962.62 'California']
+ [75328.87 144135.98 134050.07 'Florida']
+ [72107.6 127864.55 353183.81 'New York']
+ [66051.52 182645.56 118148.2 'Florida']
+ [65605.48 153032.06 107138.38 'New York']
+ [61994.48 115641.28 91131.24 'Florida']
+ [61136.38 152701.92 88218.23 'New York']
+ [63408.86 129219.61 46085.25 'California']
+ [55493.95 103057.49 214634.81 'Florida']
+ [46426.07 157693.92 210797.67 'California']
+ [46014.02 85047.44 205517.64 'New York']
+ [28663.76 127056.21 201126.82 'Florida']
+ [44069.95 51283.14 197029.42 'California']
+ [20229.59 65947.93 185265.1 'New York']
+ [38558.51 82982.09 174999.3 'California']
+ [28754.33 118546.05 172795.67 'California']
+ [27892.92 84710.77 164470.71 'Florida']
+ [23640.93 96189.63 148001.11 'California']
+ [15505.73 127382.3 35534.17 'New York']
+ [22177.74 154806.14 28334.72 'California']
+ [1000.23 124153.04 1903.93 'New York']
+ [1315.46 115816.21 297114.46 'Florida']
+ [0.0 135426.92 0.0 'California']
+ [542.05 51743.15 0.0 'New York']
+ [0.0 116983.8 45173.06 'California']]
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{5}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{y}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[192261.83 191792.06 191050.39 182901.99 166187.94 156991.12 156122.51
+ 155752.6  152211.77 149759.96 146121.95 144259.4  141585.52 134307.35
+ 132602.65 129917.04 126992.93 125370.37 124266.9  122776.86 118474.03
+ 111313.02 110352.25 108733.99 108552.04 107404.34 105733.54 105008.31
+ 103282.38 101004.64  99937.59  97483.56  97427.84  96778.92  96712.8
+  96479.51  90708.19  89949.14  81229.06  81005.76  78239.91  77798.83
+  71498.49  69758.98  65200.33  64926.08  49490.75  42559.73  35673.41
+  14681.4 ]
+    \end{Verbatim}
+
+    \subsection{Encoding categorical data}\label{encoding-categorical-data}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{6}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{compose} \PY{k+kn}{import} \PY{n}{ColumnTransformer}
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{preprocessing} \PY{k+kn}{import} \PY{n}{OneHotEncoder}
+\PY{n}{ct} \PY{o}{=} \PY{n}{ColumnTransformer}\PY{p}{(}\PY{n}{transformers}\PY{o}{=}\PY{p}{[}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{encoder}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{OneHotEncoder}\PY{p}{(}\PY{p}{)}\PY{p}{,} \PY{p}{[}\PY{l+m+mi}{3}\PY{p}{]}\PY{p}{)}\PY{p}{]}\PY{p}{,} \PY{n}{remainder}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{passthrough}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{X} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{n}{ct}\PY{o}{.}\PY{n}{fit\PYZus{}transform}\PY{p}{(}\PY{n}{X}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{7}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{X}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[[0.0 0.0 1.0 165349.2 136897.8 471784.1]
+ [1.0 0.0 0.0 162597.7 151377.59 443898.53]
+ [0.0 1.0 0.0 153441.51 101145.55 407934.54]
+ [0.0 0.0 1.0 144372.41 118671.85 383199.62]
+ [0.0 1.0 0.0 142107.34 91391.77 366168.42]
+ [0.0 0.0 1.0 131876.9 99814.71 362861.36]
+ [1.0 0.0 0.0 134615.46 147198.87 127716.82]
+ [0.0 1.0 0.0 130298.13 145530.06 323876.68]
+ [0.0 0.0 1.0 120542.52 148718.95 311613.29]
+ [1.0 0.0 0.0 123334.88 108679.17 304981.62]
+ [0.0 1.0 0.0 101913.08 110594.11 229160.95]
+ [1.0 0.0 0.0 100671.96 91790.61 249744.55]
+ [0.0 1.0 0.0 93863.75 127320.38 249839.44]
+ [1.0 0.0 0.0 91992.39 135495.07 252664.93]
+ [0.0 1.0 0.0 119943.24 156547.42 256512.92]
+ [0.0 0.0 1.0 114523.61 122616.84 261776.23]
+ [1.0 0.0 0.0 78013.11 121597.55 264346.06]
+ [0.0 0.0 1.0 94657.16 145077.58 282574.31]
+ [0.0 1.0 0.0 91749.16 114175.79 294919.57]
+ [0.0 0.0 1.0 86419.7 153514.11 0.0]
+ [1.0 0.0 0.0 76253.86 113867.3 298664.47]
+ [0.0 0.0 1.0 78389.47 153773.43 299737.29]
+ [0.0 1.0 0.0 73994.56 122782.75 303319.26]
+ [0.0 1.0 0.0 67532.53 105751.03 304768.73]
+ [0.0 0.0 1.0 77044.01 99281.34 140574.81]
+ [1.0 0.0 0.0 64664.71 139553.16 137962.62]
+ [0.0 1.0 0.0 75328.87 144135.98 134050.07]
+ [0.0 0.0 1.0 72107.6 127864.55 353183.81]
+ [0.0 1.0 0.0 66051.52 182645.56 118148.2]
+ [0.0 0.0 1.0 65605.48 153032.06 107138.38]
+ [0.0 1.0 0.0 61994.48 115641.28 91131.24]
+ [0.0 0.0 1.0 61136.38 152701.92 88218.23]
+ [1.0 0.0 0.0 63408.86 129219.61 46085.25]
+ [0.0 1.0 0.0 55493.95 103057.49 214634.81]
+ [1.0 0.0 0.0 46426.07 157693.92 210797.67]
+ [0.0 0.0 1.0 46014.02 85047.44 205517.64]
+ [0.0 1.0 0.0 28663.76 127056.21 201126.82]
+ [1.0 0.0 0.0 44069.95 51283.14 197029.42]
+ [0.0 0.0 1.0 20229.59 65947.93 185265.1]
+ [1.0 0.0 0.0 38558.51 82982.09 174999.3]
+ [1.0 0.0 0.0 28754.33 118546.05 172795.67]
+ [0.0 1.0 0.0 27892.92 84710.77 164470.71]
+ [1.0 0.0 0.0 23640.93 96189.63 148001.11]
+ [0.0 0.0 1.0 15505.73 127382.3 35534.17]
+ [1.0 0.0 0.0 22177.74 154806.14 28334.72]
+ [0.0 0.0 1.0 1000.23 124153.04 1903.93]
+ [0.0 1.0 0.0 1315.46 115816.21 297114.46]
+ [1.0 0.0 0.0 0.0 135426.92 0.0]
+ [0.0 0.0 1.0 542.05 51743.15 0.0]
+ [1.0 0.0 0.0 0.0 116983.8 45173.06]]
+    \end{Verbatim}
+
+    \subsection{Splitting the dataset into the Training set and Test
+set}\label{splitting-the-dataset-into-the-training-set-and-test-set}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{8}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{model\PYZus{}selection} \PY{k+kn}{import} \PY{n}{train\PYZus{}test\PYZus{}split}
+\PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{X\PYZus{}test}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}test} \PY{o}{=} \PY{n}{train\PYZus{}test\PYZus{}split}\PY{p}{(}\PY{n}{X}\PY{p}{,} \PY{n}{y}\PY{p}{,} \PY{n}{test\PYZus{}size} \PY{o}{=} \PY{l+m+mf}{0.2}\PY{p}{,} \PY{n}{random\PYZus{}state} \PY{o}{=} \PY{l+m+mi}{0}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \subsection{Training the Multiple Linear Regression model on the
+Training
+set}\label{training-the-multiple-linear-regression-model-on-the-training-set}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{9}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{linear\PYZus{}model} \PY{k+kn}{import} \PY{n}{LinearRegression}
+\PY{n}{regressor} \PY{o}{=} \PY{n}{LinearRegression}\PY{p}{(}\PY{p}{)}
+\PY{n}{regressor}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{9}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+LinearRegression()
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \subsection{Predicting the Test set
+results}\label{predicting-the-test-set-results}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{10}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{y\PYZus{}pred} \PY{o}{=} \PY{n}{regressor}\PY{o}{.}\PY{n}{predict}\PY{p}{(}\PY{n}{X\PYZus{}test}\PY{p}{)}
+\PY{n}{np}\PY{o}{.}\PY{n}{set\PYZus{}printoptions}\PY{p}{(}\PY{n}{precision}\PY{o}{=}\PY{l+m+mi}{2}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{concatenate}\PY{p}{(}\PY{p}{(}\PY{n}{y\PYZus{}pred}\PY{o}{.}\PY{n}{reshape}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{y\PYZus{}pred}\PY{p}{)}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{,} \PY{n}{y\PYZus{}test}\PY{o}{.}\PY{n}{reshape}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{y\PYZus{}test}\PY{p}{)}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{)}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[[103015.2  103282.38]
+ [132582.28 144259.4 ]
+ [132447.74 146121.95]
+ [ 71976.1   77798.83]
+ [178537.48 191050.39]
+ [116161.24 105008.31]
+ [ 67851.69  81229.06]
+ [ 98791.73  97483.56]
+ [113969.44 110352.25]
+ [167921.07 166187.94]]
+    \end{Verbatim}
+
+    \section{Practical 03: Implement Logistic Regeression for classification
+of handwritten digits (MNIST
+dataset)}\label{practical-03-implement-logistic-regeression-for-classification-of-handwritten-digits-mnist-dataset}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{2}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import} \PY{n+nn}{pandas} \PY{k}{as} \PY{n+nn}{pd}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \#\textbf{Data Collection}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{3}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{iris\PYZus{}data} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{/content/drive/MyDrive/MSC CS/SEM 3/1. Machine Learning \PYZam{} Deep Learning/Practicals/3. Logistic Regression/Iris.csv}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{4}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}print(iris\PYZus{}data)}
+\PY{c+c1}{\PYZsh{}iris\PYZus{}data.sample(5)}
+\PY{n}{iris\PYZus{}data}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{4}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+   Id  SepalLengthCm  SepalWidthCm  PetalLengthCm  PetalWidthCm      Species
+0   1            5.1           3.5            1.4           0.2  Iris-setosa
+1   2            4.9           3.0            1.4           0.2  Iris-setosa
+2   3            4.7           3.2            1.3           0.2  Iris-setosa
+3   4            4.6           3.1            1.5           0.2  Iris-setosa
+4   5            5.0           3.6            1.4           0.2  Iris-setosa
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \#\textbf{Data Cleaning}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{5}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{iris\PYZus{}data}\PY{o}{.}\PY{n}{info}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 150 entries, 0 to 149
+Data columns (total 6 columns):
+ \#   Column         Non-Null Count  Dtype
+---  ------         --------------  -----
+ 0   Id             150 non-null    int64
+ 1   SepalLengthCm  150 non-null    float64
+ 2   SepalWidthCm   150 non-null    float64
+ 3   PetalLengthCm  150 non-null    float64
+ 4   PetalWidthCm   150 non-null    float64
+ 5   Species        150 non-null    object
+dtypes: float64(4), int64(1), object(1)
+memory usage: 7.2+ KB
+    \end{Verbatim}
+
+    \#\textbf{Label Encoding}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{6}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Iris\PYZhy{}setosa = 0 , Iris\PYZhy{}versicolor = 1, Iris\PYZhy{}virginica = 2}
+
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{preprocessing} \PY{k+kn}{import} \PY{n}{LabelEncoder}
+\PY{n}{encoder} \PY{o}{=} \PY{n}{LabelEncoder}\PY{p}{(}\PY{p}{)}
+
+\PY{n}{iris\PYZus{}data}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Species}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{encoder}\PY{o}{.}\PY{n}{fit\PYZus{}transform}\PY{p}{(}\PY{n}{iris\PYZus{}data}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Species}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{7}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{iris\PYZus{}data}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{l+m+mi}{150}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{7}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+      Id  SepalLengthCm  SepalWidthCm  PetalLengthCm  PetalWidthCm  Species
+0      1            5.1           3.5            1.4           0.2        0
+1      2            4.9           3.0            1.4           0.2        0
+2      3            4.7           3.2            1.3           0.2        0
+3      4            4.6           3.1            1.5           0.2        0
+4      5            5.0           3.6            1.4           0.2        0
+..   {\ldots}            {\ldots}           {\ldots}            {\ldots}           {\ldots}      {\ldots}
+145  146            6.7           3.0            5.2           2.3        2
+146  147            6.3           2.5            5.0           1.9        2
+147  148            6.5           3.0            5.2           2.0        2
+148  149            6.2           3.4            5.4           2.3        2
+149  150            5.9           3.0            5.1           1.8        2
+
+[150 rows x 6 columns]
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \#\textbf{Data Analysis}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{8}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k}{as} \PY{n+nn}{plt}
+
+\PY{n}{plt}\PY{o}{.}\PY{n}{pie}\PY{p}{(}\PY{n}{iris\PYZus{}data}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Species}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{value\PYZus{}counts}\PY{p}{(}\PY{p}{)}\PY{p}{,}\PY{n}{labels} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Setosa}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Versicolor}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Virginicia}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{autopct} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+si}{\PYZpc{}0.2f}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_48_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \#\textbf{Create Dependent \& Independent Variable}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{9}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{x} \PY{o}{=} \PY{n}{iris\PYZus{}data}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Species}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{axis} \PY{o}{=} \PY{l+m+mi}{1}\PY{p}{)}
+\PY{n}{y} \PY{o}{=} \PY{n}{iris\PYZus{}data}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Species}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{10}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{x}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+      Id  SepalLengthCm  SepalWidthCm  PetalLengthCm  PetalWidthCm
+0      1            5.1           3.5            1.4           0.2
+1      2            4.9           3.0            1.4           0.2
+2      3            4.7           3.2            1.3           0.2
+3      4            4.6           3.1            1.5           0.2
+4      5            5.0           3.6            1.4           0.2
+..   {\ldots}            {\ldots}           {\ldots}            {\ldots}           {\ldots}
+145  146            6.7           3.0            5.2           2.3
+146  147            6.3           2.5            5.0           1.9
+147  148            6.5           3.0            5.2           2.0
+148  149            6.2           3.4            5.4           2.3
+149  150            5.9           3.0            5.1           1.8
+
+[150 rows x 5 columns]
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{11}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{y}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+0      0
+1      0
+2      0
+3      0
+4      0
+      ..
+145    2
+146    2
+147    2
+148    2
+149    2
+Name: Species, Length: 150, dtype: int64
+    \end{Verbatim}
+
+    \#\textbf{Split data into Train and Test dataset}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{12}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{model\PYZus{}selection} \PY{k+kn}{import} \PY{n}{train\PYZus{}test\PYZus{}split}
+\PY{n}{x\PYZus{}train}\PY{p}{,}\PY{n}{x\PYZus{}test}\PY{p}{,}\PY{n}{y\PYZus{}train}\PY{p}{,}\PY{n}{y\PYZus{}test} \PY{o}{=} \PY{n}{train\PYZus{}test\PYZus{}split}\PY{p}{(}\PY{n}{x}\PY{p}{,}\PY{n}{y}\PY{p}{,}\PY{n}{test\PYZus{}size} \PY{o}{=} \PY{l+m+mf}{0.2}\PY{p}{,} \PY{n}{random\PYZus{}state} \PY{o}{=} \PY{l+m+mi}{2}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \#\textbf{Train the model}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{13}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{linear\PYZus{}model} \PY{k+kn}{import} \PY{n}{LogisticRegression}
+\PY{n}{model} \PY{o}{=} \PY{n}{LogisticRegression}\PY{p}{(}\PY{n}{max\PYZus{}iter} \PY{o}{=} \PY{l+m+mi}{1000}\PY{p}{)}
+\PY{n}{model}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{x\PYZus{}train}\PY{p}{,}\PY{n}{y\PYZus{}train}\PY{p}{)}
+\PY{n}{LogisticRegression}\PY{p}{(}\PY{n}{max\PYZus{}iter}\PY{o}{=}\PY{l+m+mi}{1000}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{13}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+LogisticRegression(max\_iter=1000)
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \#\textbf{Predict train data}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{14}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{pred\PYZus{}train} \PY{o}{=} \PY{n}{model}\PY{o}{.}\PY{n}{predict}\PY{p}{(}\PY{n}{x\PYZus{}train}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \#\textbf{Check accuracy on train data}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{15}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{metrics} \PY{k+kn}{import} \PY{n}{confusion\PYZus{}matrix}\PY{p}{,}\PY{n}{accuracy\PYZus{}score}
+\PY{n}{accuracy\PYZus{}score}\PY{p}{(}\PY{n}{y\PYZus{}train}\PY{p}{,}\PY{n}{pred\PYZus{}train}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{15}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+1.0
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \#\textbf{Predict Test data}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{16}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{pred\PYZus{}test} \PY{o}{=} \PY{n}{model}\PY{o}{.}\PY{n}{predict}\PY{p}{(}\PY{n}{x\PYZus{}test}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \#\textbf{Check accuracy and print Confusion matrix}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{17}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{accuracy\PYZus{}score}\PY{p}{(}\PY{n}{y\PYZus{}test}\PY{p}{,} \PY{n}{pred\PYZus{}test}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{17}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+1.0
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{20}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{confusion\PYZus{}matrix}\PY{p}{(}\PY{n}{y\PYZus{}test}\PY{p}{,}\PY{n}{pred\PYZus{}test}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{20}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+array([[14,  0,  0],
+       [ 0,  8,  0],
+       [ 0,  0,  8]])
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \section{Practical 04: Implement SVM
+classifier}\label{practical-04-implement-svm-classifier}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+\PY{k+kn}{import} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k}{as} \PY{n+nn}{plt}
+\PY{k+kn}{import} \PY{n+nn}{pandas} \PY{k}{as} \PY{n+nn}{pd}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{dataset}\PY{o}{=}\PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{/content/drive/MyDrive/Social\PYZus{}Network\PYZus{}Ads.csv}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{x}\PY{o}{=}\PY{n}{dataset}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{p}{:}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{.}\PY{n}{values}
+\PY{n}{y}\PY{o}{=}\PY{n}{dataset}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{.}\PY{n}{values}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{model\PYZus{}selection} \PY{k+kn}{import} \PY{n}{train\PYZus{}test\PYZus{}split}
+\PY{n}{x\PYZus{}train}\PY{p}{,} \PY{n}{x\PYZus{}test}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}test} \PY{o}{=} \PY{n}{train\PYZus{}test\PYZus{}split}\PY{p}{(}\PY{n}{x}\PY{p}{,}\PY{n}{y}\PY{p}{,}\PY{n}{test\PYZus{}size}\PY{o}{=}\PY{l+m+mf}{0.25}\PY{p}{,} \PY{n}{random\PYZus{}state}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{x\PYZus{}train}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[[    44  39000]
+ [    32 120000]
+ [    38  50000]
+ [    32 135000]
+ [    52  21000]
+ [    53 104000]
+ [    39  42000]
+ [    38  61000]
+ [    36  50000]
+ [    36  63000]
+ [    35  25000]
+ [    35  50000]
+ [    42  73000]
+ [    47  49000]
+ [    59  29000]
+ [    49  65000]
+ [    45 131000]
+ [    31  89000]
+ [    46  82000]
+ [    47  51000]
+ [    26  15000]
+ [    60 102000]
+ [    38 112000]
+ [    40 107000]
+ [    42  53000]
+ [    35  59000]
+ [    48  41000]
+ [    48 134000]
+ [    38 113000]
+ [    29 148000]
+ [    26  15000]
+ [    60  42000]
+ [    24  19000]
+ [    42 149000]
+ [    46  96000]
+ [    28  59000]
+ [    39  96000]
+ [    28  89000]
+ [    41  72000]
+ [    45  26000]
+ [    33  69000]
+ [    20  82000]
+ [    31  74000]
+ [    42  80000]
+ [    35  72000]
+ [    33 149000]
+ [    40  71000]
+ [    51 146000]
+ [    46  79000]
+ [    35  75000]
+ [    38  51000]
+ [    36  75000]
+ [    37  78000]
+ [    38  61000]
+ [    60 108000]
+ [    20  82000]
+ [    57  74000]
+ [    42  65000]
+ [    26  80000]
+ [    46 117000]
+ [    35  61000]
+ [    21  68000]
+ [    28  44000]
+ [    41  87000]
+ [    37  33000]
+ [    27  90000]
+ [    39  42000]
+ [    28 123000]
+ [    31 118000]
+ [    25  87000]
+ [    35  71000]
+ [    37  70000]
+ [    35  39000]
+ [    47  23000]
+ [    35 147000]
+ [    48 138000]
+ [    26  86000]
+ [    25  79000]
+ [    52 138000]
+ [    51  23000]
+ [    35  60000]
+ [    33 113000]
+ [    30 107000]
+ [    48  33000]
+ [    41  80000]
+ [    48  96000]
+ [    31  18000]
+ [    31  71000]
+ [    43 129000]
+ [    59  76000]
+ [    18  44000]
+ [    36 118000]
+ [    42  90000]
+ [    47  30000]
+ [    26  43000]
+ [    40  78000]
+ [    46  59000]
+ [    59  42000]
+ [    46  74000]
+ [    35  91000]
+ [    28  59000]
+ [    40  57000]
+ [    59 143000]
+ [    57  26000]
+ [    52  38000]
+ [    47 113000]
+ [    53 143000]
+ [    35  27000]
+ [    58 101000]
+ [    45  45000]
+ [    23  82000]
+ [    46  23000]
+ [    42  65000]
+ [    28  84000]
+ [    38  59000]
+ [    26  84000]
+ [    29  28000]
+ [    37  71000]
+ [    22  55000]
+ [    48  35000]
+ [    49  28000]
+ [    38  65000]
+ [    27  17000]
+ [    46  28000]
+ [    48 141000]
+ [    26  17000]
+ [    35  97000]
+ [    39  59000]
+ [    24  27000]
+ [    32  18000]
+ [    46  88000]
+ [    35  58000]
+ [    56  60000]
+ [    47  34000]
+ [    40  72000]
+ [    32 100000]
+ [    19  21000]
+ [    25  90000]
+ [    35  88000]
+ [    28  32000]
+ [    50  20000]
+ [    40  59000]
+ [    50  44000]
+ [    35  72000]
+ [    40 142000]
+ [    46  32000]
+ [    39  71000]
+ [    20  74000]
+ [    29  75000]
+ [    31  76000]
+ [    47  25000]
+ [    40  61000]
+ [    34 112000]
+ [    38  80000]
+ [    42  75000]
+ [    47  47000]
+ [    39  75000]
+ [    19  25000]
+ [    37  80000]
+ [    36  60000]
+ [    41  52000]
+ [    36 125000]
+ [    48  29000]
+ [    36 126000]
+ [    51 134000]
+ [    27  57000]
+ [    38  71000]
+ [    39  61000]
+ [    22  27000]
+ [    33  60000]
+ [    48  74000]
+ [    58  23000]
+ [    53  72000]
+ [    32 117000]
+ [    54  70000]
+ [    30  80000]
+ [    58  95000]
+ [    26  52000]
+ [    45  79000]
+ [    24  55000]
+ [    40  75000]
+ [    33  28000]
+ [    44 139000]
+ [    22  18000]
+ [    33  51000]
+ [    43 133000]
+ [    24  32000]
+ [    46  22000]
+ [    35  55000]
+ [    54 104000]
+ [    48 119000]
+ [    35  53000]
+ [    37 144000]
+ [    23  66000]
+ [    37 137000]
+ [    31  58000]
+ [    33  41000]
+ [    45  22000]
+ [    30  15000]
+ [    19  19000]
+ [    49  74000]
+ [    39 122000]
+ [    35  73000]
+ [    39  71000]
+ [    24  23000]
+ [    41  72000]
+ [    29  83000]
+ [    54  26000]
+ [    35  44000]
+ [    37  75000]
+ [    29  47000]
+ [    31  68000]
+ [    42  54000]
+ [    30 135000]
+ [    52 114000]
+ [    50  36000]
+ [    56 133000]
+ [    29  61000]
+ [    30  89000]
+ [    26  16000]
+ [    33  31000]
+ [    41  72000]
+ [    36  33000]
+ [    55 125000]
+ [    48 131000]
+ [    41  71000]
+ [    30  62000]
+ [    37  72000]
+ [    41  63000]
+ [    58  47000]
+ [    30 116000]
+ [    20  49000]
+ [    37  74000]
+ [    41  59000]
+ [    49  89000]
+ [    28  79000]
+ [    53  82000]
+ [    40  57000]
+ [    60  34000]
+ [    35 108000]
+ [    21  72000]
+ [    38  71000]
+ [    39 106000]
+ [    37  57000]
+ [    26  72000]
+ [    35  23000]
+ [    54 108000]
+ [    30  17000]
+ [    39 134000]
+ [    29  43000]
+ [    33  43000]
+ [    35  38000]
+ [    41  45000]
+ [    41  72000]
+ [    39 134000]
+ [    27 137000]
+ [    21  16000]
+ [    26  32000]
+ [    31  66000]
+ [    39  73000]
+ [    41  79000]
+ [    47  50000]
+ [    41  30000]
+ [    37  93000]
+ [    60  46000]
+ [    25  22000]
+ [    28  37000]
+ [    38  55000]
+ [    36  54000]
+ [    20  36000]
+ [    56 104000]
+ [    40  57000]
+ [    42 108000]
+ [    20  23000]
+ [    40  65000]
+ [    47  20000]
+ [    18  86000]
+ [    35  79000]
+ [    57  33000]
+ [    34  72000]
+ [    49  39000]
+ [    27  31000]
+ [    19  70000]
+ [    39  79000]
+ [    26  81000]
+ [    25  80000]
+ [    28  85000]
+ [    55  39000]
+ [    50  88000]
+ [    49  88000]
+ [    52 150000]
+ [    35  65000]
+ [    42  54000]
+ [    34  43000]
+ [    37  52000]
+ [    48  30000]
+ [    29  43000]
+ [    36  52000]
+ [    27  54000]
+ [    26 118000]]
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{x\PYZus{}test}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[[    30  87000]
+ [    38  50000]
+ [    35  75000]
+ [    30  79000]
+ [    35  50000]
+ [    27  20000]
+ [    31  15000]
+ [    36 144000]
+ [    18  68000]
+ [    47  43000]
+ [    30  49000]
+ [    28  55000]
+ [    37  55000]
+ [    39  77000]
+ [    20  86000]
+ [    32 117000]
+ [    37  77000]
+ [    19  85000]
+ [    55 130000]
+ [    35  22000]
+ [    35  47000]
+ [    47 144000]
+ [    41  51000]
+ [    47 105000]
+ [    23  28000]
+ [    49 141000]
+ [    28  87000]
+ [    29  80000]
+ [    37  62000]
+ [    32  86000]
+ [    21  88000]
+ [    37  79000]
+ [    57  60000]
+ [    37  53000]
+ [    24  58000]
+ [    18  52000]
+ [    22  81000]
+ [    34  43000]
+ [    31  34000]
+ [    49  36000]
+ [    27  88000]
+ [    41  52000]
+ [    27  84000]
+ [    35  20000]
+ [    43 112000]
+ [    27  58000]
+ [    37  80000]
+ [    52  90000]
+ [    26  30000]
+ [    49  86000]
+ [    57 122000]
+ [    34  25000]
+ [    35  57000]
+ [    34 115000]
+ [    59  88000]
+ [    45  32000]
+ [    29  83000]
+ [    26  80000]
+ [    49  28000]
+ [    23  20000]
+ [    32  18000]
+ [    60  42000]
+ [    19  76000]
+ [    36  99000]
+ [    19  26000]
+ [    60  83000]
+ [    24  89000]
+ [    27  58000]
+ [    40  47000]
+ [    42  70000]
+ [    32 150000]
+ [    35  77000]
+ [    22  63000]
+ [    45  22000]
+ [    27  89000]
+ [    18  82000]
+ [    42  79000]
+ [    40  60000]
+ [    53  34000]
+ [    47 107000]
+ [    58 144000]
+ [    59  83000]
+ [    24  55000]
+ [    26  35000]
+ [    58  38000]
+ [    42  80000]
+ [    40  75000]
+ [    59 130000]
+ [    46  41000]
+ [    41  60000]
+ [    42  64000]
+ [    37 146000]
+ [    23  48000]
+ [    25  33000]
+ [    24  84000]
+ [    27  96000]
+ [    23  63000]
+ [    48  33000]
+ [    48  90000]
+ [    42 104000]]
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{y\PYZus{}train}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[0 1 0 1 1 1 0 0 0 0 0 0 1 1 1 0 1 0 0 1 0 1 0 1 0 0 1 1 1 1 0 1 0 1 0 0 1
+ 0 0 1 0 0 0 0 0 1 1 1 1 0 0 0 1 0 1 0 1 0 0 1 0 0 0 1 0 0 0 1 1 0 0 1 0 1
+ 1 1 0 0 1 1 0 0 1 1 0 1 0 0 1 1 0 1 1 1 0 0 0 0 0 1 0 0 1 1 1 1 1 0 1 1 0
+ 1 0 0 0 0 0 0 0 1 1 0 0 1 0 0 1 0 0 0 1 0 1 1 0 1 0 0 0 0 1 0 0 0 1 1 0 0
+ 0 0 1 0 1 0 0 0 1 0 0 0 0 1 1 1 0 0 0 0 0 0 1 1 1 1 1 0 1 0 0 0 0 0 1 0 0
+ 0 0 0 0 1 1 0 1 0 1 0 0 1 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 1 0 1 1 0 0 0 0 0
+ 0 1 1 0 0 0 0 1 0 0 0 0 1 0 1 0 1 0 0 0 1 0 0 0 1 0 1 0 0 0 0 0 1 1 0 0 0
+ 0 0 1 0 1 1 0 0 0 0 0 1 0 1 0 0 1 0 0 1 0 1 0 0 0 0 0 0 1 1 1 1 0 0 0 0 1
+ 0 0 0 0]
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{y\PYZus{}test}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 1 0 0 1 0 1 0 1 0 0 0 0 0 1 1 0 0 0 0
+ 0 0 1 0 0 0 0 1 0 0 1 0 1 1 0 0 0 1 1 0 0 1 0 0 1 0 1 0 1 0 0 0 0 1 0 0 1
+ 0 0 0 0 1 1 1 0 0 0 1 1 0 1 1 0 0 1 0 0 0 1 0 1 1 1]
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{preprocessing} \PY{k+kn}{import} \PY{n}{StandardScaler}
+\PY{n}{sc}\PY{o}{=}\PY{n}{StandardScaler}\PY{p}{(}\PY{p}{)}
+\PY{n}{x\PYZus{}train}\PY{o}{=}\PY{n}{sc}\PY{o}{.}\PY{n}{fit\PYZus{}transform}\PY{p}{(}\PY{n}{x\PYZus{}train}\PY{p}{)}
+\PY{n}{x\PYZus{}test}\PY{o}{=}\PY{n}{sc}\PY{o}{.}\PY{n}{transform}\PY{p}{(}\PY{n}{x\PYZus{}test}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{x\PYZus{}train}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[[ 0.58164944 -0.88670699]
+ [-0.60673761  1.46173768]
+ [-0.01254409 -0.5677824 ]
+ [-0.60673761  1.89663484]
+ [ 1.37390747 -1.40858358]
+ [ 1.47293972  0.99784738]
+ [ 0.08648817 -0.79972756]
+ [-0.01254409 -0.24885782]
+ [-0.21060859 -0.5677824 ]
+ [-0.21060859 -0.19087153]
+ [-0.30964085 -1.29261101]
+ [-0.30964085 -0.5677824 ]
+ [ 0.38358493  0.09905991]
+ [ 0.8787462  -0.59677555]
+ [ 2.06713324 -1.17663843]
+ [ 1.07681071 -0.13288524]
+ [ 0.68068169  1.78066227]
+ [-0.70576986  0.56295021]
+ [ 0.77971394  0.35999821]
+ [ 0.8787462  -0.53878926]
+ [-1.20093113 -1.58254245]
+ [ 2.1661655   0.93986109]
+ [-0.01254409  1.22979253]
+ [ 0.18552042  1.08482681]
+ [ 0.38358493 -0.48080297]
+ [-0.30964085 -0.30684411]
+ [ 0.97777845 -0.8287207 ]
+ [ 0.97777845  1.8676417 ]
+ [-0.01254409  1.25878567]
+ [-0.90383437  2.27354572]
+ [-1.20093113 -1.58254245]
+ [ 2.1661655  -0.79972756]
+ [-1.39899564 -1.46656987]
+ [ 0.38358493  2.30253886]
+ [ 0.77971394  0.76590222]
+ [-1.00286662 -0.30684411]
+ [ 0.08648817  0.76590222]
+ [-1.00286662  0.56295021]
+ [ 0.28455268  0.07006676]
+ [ 0.68068169 -1.26361786]
+ [-0.50770535 -0.01691267]
+ [-1.79512465  0.35999821]
+ [-0.70576986  0.12805305]
+ [ 0.38358493  0.30201192]
+ [-0.30964085  0.07006676]
+ [-0.50770535  2.30253886]
+ [ 0.18552042  0.04107362]
+ [ 1.27487521  2.21555943]
+ [ 0.77971394  0.27301877]
+ [-0.30964085  0.1570462 ]
+ [-0.01254409 -0.53878926]
+ [-0.21060859  0.1570462 ]
+ [-0.11157634  0.24402563]
+ [-0.01254409 -0.24885782]
+ [ 2.1661655   1.11381995]
+ [-1.79512465  0.35999821]
+ [ 1.86906873  0.12805305]
+ [ 0.38358493 -0.13288524]
+ [-1.20093113  0.30201192]
+ [ 0.77971394  1.37475825]
+ [-0.30964085 -0.24885782]
+ [-1.6960924  -0.04590581]
+ [-1.00286662 -0.74174127]
+ [ 0.28455268  0.50496393]
+ [-0.11157634 -1.06066585]
+ [-1.10189888  0.59194336]
+ [ 0.08648817 -0.79972756]
+ [-1.00286662  1.54871711]
+ [-0.70576986  1.40375139]
+ [-1.29996338  0.50496393]
+ [-0.30964085  0.04107362]
+ [-0.11157634  0.01208048]
+ [-0.30964085 -0.88670699]
+ [ 0.8787462  -1.3505973 ]
+ [-0.30964085  2.24455257]
+ [ 0.97777845  1.98361427]
+ [-1.20093113  0.47597078]
+ [-1.29996338  0.27301877]
+ [ 1.37390747  1.98361427]
+ [ 1.27487521 -1.3505973 ]
+ [-0.30964085 -0.27785096]
+ [-0.50770535  1.25878567]
+ [-0.80480212  1.08482681]
+ [ 0.97777845 -1.06066585]
+ [ 0.28455268  0.30201192]
+ [ 0.97777845  0.76590222]
+ [-0.70576986 -1.49556302]
+ [-0.70576986  0.04107362]
+ [ 0.48261718  1.72267598]
+ [ 2.06713324  0.18603934]
+ [-1.99318916 -0.74174127]
+ [-0.21060859  1.40375139]
+ [ 0.38358493  0.59194336]
+ [ 0.8787462  -1.14764529]
+ [-1.20093113 -0.77073441]
+ [ 0.18552042  0.24402563]
+ [ 0.77971394 -0.30684411]
+ [ 2.06713324 -0.79972756]
+ [ 0.77971394  0.12805305]
+ [-0.30964085  0.6209365 ]
+ [-1.00286662 -0.30684411]
+ [ 0.18552042 -0.3648304 ]
+ [ 2.06713324  2.12857999]
+ [ 1.86906873 -1.26361786]
+ [ 1.37390747 -0.91570013]
+ [ 0.8787462   1.25878567]
+ [ 1.47293972  2.12857999]
+ [-0.30964085 -1.23462472]
+ [ 1.96810099  0.91086794]
+ [ 0.68068169 -0.71274813]
+ [-1.49802789  0.35999821]
+ [ 0.77971394 -1.3505973 ]
+ [ 0.38358493 -0.13288524]
+ [-1.00286662  0.41798449]
+ [-0.01254409 -0.30684411]
+ [-1.20093113  0.41798449]
+ [-0.90383437 -1.20563157]
+ [-0.11157634  0.04107362]
+ [-1.59706014 -0.42281668]
+ [ 0.97777845 -1.00267957]
+ [ 1.07681071 -1.20563157]
+ [-0.01254409 -0.13288524]
+ [-1.10189888 -1.52455616]
+ [ 0.77971394 -1.20563157]
+ [ 0.97777845  2.07059371]
+ [-1.20093113 -1.52455616]
+ [-0.30964085  0.79489537]
+ [ 0.08648817 -0.30684411]
+ [-1.39899564 -1.23462472]
+ [-0.60673761 -1.49556302]
+ [ 0.77971394  0.53395707]
+ [-0.30964085 -0.33583725]
+ [ 1.77003648 -0.27785096]
+ [ 0.8787462  -1.03167271]
+ [ 0.18552042  0.07006676]
+ [-0.60673761  0.8818748 ]
+ [-1.89415691 -1.40858358]
+ [-1.29996338  0.59194336]
+ [-0.30964085  0.53395707]
+ [-1.00286662 -1.089659  ]
+ [ 1.17584296 -1.43757673]
+ [ 0.18552042 -0.30684411]
+ [ 1.17584296 -0.74174127]
+ [-0.30964085  0.07006676]
+ [ 0.18552042  2.09958685]
+ [ 0.77971394 -1.089659  ]
+ [ 0.08648817  0.04107362]
+ [-1.79512465  0.12805305]
+ [-0.90383437  0.1570462 ]
+ [-0.70576986  0.18603934]
+ [ 0.8787462  -1.29261101]
+ [ 0.18552042 -0.24885782]
+ [-0.4086731   1.22979253]
+ [-0.01254409  0.30201192]
+ [ 0.38358493  0.1570462 ]
+ [ 0.8787462  -0.65476184]
+ [ 0.08648817  0.1570462 ]
+ [-1.89415691 -1.29261101]
+ [-0.11157634  0.30201192]
+ [-0.21060859 -0.27785096]
+ [ 0.28455268 -0.50979612]
+ [-0.21060859  1.6067034 ]
+ [ 0.97777845 -1.17663843]
+ [-0.21060859  1.63569655]
+ [ 1.27487521  1.8676417 ]
+ [-1.10189888 -0.3648304 ]
+ [-0.01254409  0.04107362]
+ [ 0.08648817 -0.24885782]
+ [-1.59706014 -1.23462472]
+ [-0.50770535 -0.27785096]
+ [ 0.97777845  0.12805305]
+ [ 1.96810099 -1.3505973 ]
+ [ 1.47293972  0.07006676]
+ [-0.60673761  1.37475825]
+ [ 1.57197197  0.01208048]
+ [-0.80480212  0.30201192]
+ [ 1.96810099  0.73690908]
+ [-1.20093113 -0.50979612]
+ [ 0.68068169  0.27301877]
+ [-1.39899564 -0.42281668]
+ [ 0.18552042  0.1570462 ]
+ [-0.50770535 -1.20563157]
+ [ 0.58164944  2.01260742]
+ [-1.59706014 -1.49556302]
+ [-0.50770535 -0.53878926]
+ [ 0.48261718  1.83864855]
+ [-1.39899564 -1.089659  ]
+ [ 0.77971394 -1.37959044]
+ [-0.30964085 -0.42281668]
+ [ 1.57197197  0.99784738]
+ [ 0.97777845  1.43274454]
+ [-0.30964085 -0.48080297]
+ [-0.11157634  2.15757314]
+ [-1.49802789 -0.1038921 ]
+ [-0.11157634  1.95462113]
+ [-0.70576986 -0.33583725]
+ [-0.50770535 -0.8287207 ]
+ [ 0.68068169 -1.37959044]
+ [-0.80480212 -1.58254245]
+ [-1.89415691 -1.46656987]
+ [ 1.07681071  0.12805305]
+ [ 0.08648817  1.51972397]
+ [-0.30964085  0.09905991]
+ [ 0.08648817  0.04107362]
+ [-1.39899564 -1.3505973 ]
+ [ 0.28455268  0.07006676]
+ [-0.90383437  0.38899135]
+ [ 1.57197197 -1.26361786]
+ [-0.30964085 -0.74174127]
+ [-0.11157634  0.1570462 ]
+ [-0.90383437 -0.65476184]
+ [-0.70576986 -0.04590581]
+ [ 0.38358493 -0.45180983]
+ [-0.80480212  1.89663484]
+ [ 1.37390747  1.28777882]
+ [ 1.17584296 -0.97368642]
+ [ 1.77003648  1.83864855]
+ [-0.90383437 -0.24885782]
+ [-0.80480212  0.56295021]
+ [-1.20093113 -1.5535493 ]
+ [-0.50770535 -1.11865214]
+ [ 0.28455268  0.07006676]
+ [-0.21060859 -1.06066585]
+ [ 1.67100423  1.6067034 ]
+ [ 0.97777845  1.78066227]
+ [ 0.28455268  0.04107362]
+ [-0.80480212 -0.21986468]
+ [-0.11157634  0.07006676]
+ [ 0.28455268 -0.19087153]
+ [ 1.96810099 -0.65476184]
+ [-0.80480212  1.3457651 ]
+ [-1.79512465 -0.59677555]
+ [-0.11157634  0.12805305]
+ [ 0.28455268 -0.30684411]
+ [ 1.07681071  0.56295021]
+ [-1.00286662  0.27301877]
+ [ 1.47293972  0.35999821]
+ [ 0.18552042 -0.3648304 ]
+ [ 2.1661655  -1.03167271]
+ [-0.30964085  1.11381995]
+ [-1.6960924   0.07006676]
+ [-0.01254409  0.04107362]
+ [ 0.08648817  1.05583366]
+ [-0.11157634 -0.3648304 ]
+ [-1.20093113  0.07006676]
+ [-0.30964085 -1.3505973 ]
+ [ 1.57197197  1.11381995]
+ [-0.80480212 -1.52455616]
+ [ 0.08648817  1.8676417 ]
+ [-0.90383437 -0.77073441]
+ [-0.50770535 -0.77073441]
+ [-0.30964085 -0.91570013]
+ [ 0.28455268 -0.71274813]
+ [ 0.28455268  0.07006676]
+ [ 0.08648817  1.8676417 ]
+ [-1.10189888  1.95462113]
+ [-1.6960924  -1.5535493 ]
+ [-1.20093113 -1.089659  ]
+ [-0.70576986 -0.1038921 ]
+ [ 0.08648817  0.09905991]
+ [ 0.28455268  0.27301877]
+ [ 0.8787462  -0.5677824 ]
+ [ 0.28455268 -1.14764529]
+ [-0.11157634  0.67892279]
+ [ 2.1661655  -0.68375498]
+ [-1.29996338 -1.37959044]
+ [-1.00286662 -0.94469328]
+ [-0.01254409 -0.42281668]
+ [-0.21060859 -0.45180983]
+ [-1.79512465 -0.97368642]
+ [ 1.77003648  0.99784738]
+ [ 0.18552042 -0.3648304 ]
+ [ 0.38358493  1.11381995]
+ [-1.79512465 -1.3505973 ]
+ [ 0.18552042 -0.13288524]
+ [ 0.8787462  -1.43757673]
+ [-1.99318916  0.47597078]
+ [-0.30964085  0.27301877]
+ [ 1.86906873 -1.06066585]
+ [-0.4086731   0.07006676]
+ [ 1.07681071 -0.88670699]
+ [-1.10189888 -1.11865214]
+ [-1.89415691  0.01208048]
+ [ 0.08648817  0.27301877]
+ [-1.20093113  0.33100506]
+ [-1.29996338  0.30201192]
+ [-1.00286662  0.44697764]
+ [ 1.67100423 -0.88670699]
+ [ 1.17584296  0.53395707]
+ [ 1.07681071  0.53395707]
+ [ 1.37390747  2.331532  ]
+ [-0.30964085 -0.13288524]
+ [ 0.38358493 -0.45180983]
+ [-0.4086731  -0.77073441]
+ [-0.11157634 -0.50979612]
+ [ 0.97777845 -1.14764529]
+ [-0.90383437 -0.77073441]
+ [-0.21060859 -0.50979612]
+ [-1.10189888 -0.45180983]
+ [-1.20093113  1.40375139]]
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{x\PYZus{}test}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[[-0.80480212  0.50496393]
+ [-0.01254409 -0.5677824 ]
+ [-0.30964085  0.1570462 ]
+ [-0.80480212  0.27301877]
+ [-0.30964085 -0.5677824 ]
+ [-1.10189888 -1.43757673]
+ [-0.70576986 -1.58254245]
+ [-0.21060859  2.15757314]
+ [-1.99318916 -0.04590581]
+ [ 0.8787462  -0.77073441]
+ [-0.80480212 -0.59677555]
+ [-1.00286662 -0.42281668]
+ [-0.11157634 -0.42281668]
+ [ 0.08648817  0.21503249]
+ [-1.79512465  0.47597078]
+ [-0.60673761  1.37475825]
+ [-0.11157634  0.21503249]
+ [-1.89415691  0.44697764]
+ [ 1.67100423  1.75166912]
+ [-0.30964085 -1.37959044]
+ [-0.30964085 -0.65476184]
+ [ 0.8787462   2.15757314]
+ [ 0.28455268 -0.53878926]
+ [ 0.8787462   1.02684052]
+ [-1.49802789 -1.20563157]
+ [ 1.07681071  2.07059371]
+ [-1.00286662  0.50496393]
+ [-0.90383437  0.30201192]
+ [-0.11157634 -0.21986468]
+ [-0.60673761  0.47597078]
+ [-1.6960924   0.53395707]
+ [-0.11157634  0.27301877]
+ [ 1.86906873 -0.27785096]
+ [-0.11157634 -0.48080297]
+ [-1.39899564 -0.33583725]
+ [-1.99318916 -0.50979612]
+ [-1.59706014  0.33100506]
+ [-0.4086731  -0.77073441]
+ [-0.70576986 -1.03167271]
+ [ 1.07681071 -0.97368642]
+ [-1.10189888  0.53395707]
+ [ 0.28455268 -0.50979612]
+ [-1.10189888  0.41798449]
+ [-0.30964085 -1.43757673]
+ [ 0.48261718  1.22979253]
+ [-1.10189888 -0.33583725]
+ [-0.11157634  0.30201192]
+ [ 1.37390747  0.59194336]
+ [-1.20093113 -1.14764529]
+ [ 1.07681071  0.47597078]
+ [ 1.86906873  1.51972397]
+ [-0.4086731  -1.29261101]
+ [-0.30964085 -0.3648304 ]
+ [-0.4086731   1.31677196]
+ [ 2.06713324  0.53395707]
+ [ 0.68068169 -1.089659  ]
+ [-0.90383437  0.38899135]
+ [-1.20093113  0.30201192]
+ [ 1.07681071 -1.20563157]
+ [-1.49802789 -1.43757673]
+ [-0.60673761 -1.49556302]
+ [ 2.1661655  -0.79972756]
+ [-1.89415691  0.18603934]
+ [-0.21060859  0.85288166]
+ [-1.89415691 -1.26361786]
+ [ 2.1661655   0.38899135]
+ [-1.39899564  0.56295021]
+ [-1.10189888 -0.33583725]
+ [ 0.18552042 -0.65476184]
+ [ 0.38358493  0.01208048]
+ [-0.60673761  2.331532  ]
+ [-0.30964085  0.21503249]
+ [-1.59706014 -0.19087153]
+ [ 0.68068169 -1.37959044]
+ [-1.10189888  0.56295021]
+ [-1.99318916  0.35999821]
+ [ 0.38358493  0.27301877]
+ [ 0.18552042 -0.27785096]
+ [ 1.47293972 -1.03167271]
+ [ 0.8787462   1.08482681]
+ [ 1.96810099  2.15757314]
+ [ 2.06713324  0.38899135]
+ [-1.39899564 -0.42281668]
+ [-1.20093113 -1.00267957]
+ [ 1.96810099 -0.91570013]
+ [ 0.38358493  0.30201192]
+ [ 0.18552042  0.1570462 ]
+ [ 2.06713324  1.75166912]
+ [ 0.77971394 -0.8287207 ]
+ [ 0.28455268 -0.27785096]
+ [ 0.38358493 -0.16187839]
+ [-0.11157634  2.21555943]
+ [-1.49802789 -0.62576869]
+ [-1.29996338 -1.06066585]
+ [-1.39899564  0.41798449]
+ [-1.10189888  0.76590222]
+ [-1.49802789 -0.19087153]
+ [ 0.97777845 -1.06066585]
+ [ 0.97777845  0.59194336]
+ [ 0.38358493  0.99784738]]
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{svm} \PY{k+kn}{import} \PY{n}{SVC}
+\PY{n}{classifier} \PY{o}{=} \PY{n}{SVC}\PY{p}{(}\PY{n}{kernel}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{linear}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{random\PYZus{}state}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{)}
+\PY{n}{classifier}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{x\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+SVC(kernel='linear', random\_state=0)
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{classifier}\PY{o}{.}\PY{n}{predict}\PY{p}{(}\PY{n}{sc}\PY{o}{.}\PY{n}{transform}\PY{p}{(}\PY{p}{[}\PY{p}{[}\PY{l+m+mi}{40}\PY{p}{,}\PY{l+m+mi}{200000}\PY{p}{]}\PY{p}{]}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[1]
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{y\PYZus{}pred}\PY{o}{=}\PY{n}{classifier}\PY{o}{.}\PY{n}{predict}\PY{p}{(}\PY{n}{x\PYZus{}test}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{concatenate}\PY{p}{(}\PY{p}{(}\PY{n}{y\PYZus{}pred}\PY{o}{.}\PY{n}{reshape}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{y\PYZus{}pred}\PY{p}{)}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{,}\PY{n}{y\PYZus{}test}\PY{o}{.}\PY{n}{reshape}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{y\PYZus{}test}\PY{p}{)}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{)}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[[0 0]
+ [0 0]
+ [0 0]
+ [0 0]
+ [0 0]
+ [0 0]
+ [0 0]
+ [1 1]
+ [0 0]
+ [0 0]
+ [0 0]
+ [0 0]
+ [0 0]
+ [0 0]
+ [0 0]
+ [0 0]
+ [0 0]
+ [0 0]
+ [1 1]
+ [0 0]
+ [0 0]
+ [1 1]
+ [0 0]
+ [1 1]
+ [0 0]
+ [1 1]
+ [0 0]
+ [0 0]
+ [0 0]
+ [0 0]
+ [0 0]
+ [0 1]
+ [1 1]
+ [0 0]
+ [0 0]
+ [0 0]
+ [0 0]
+ [0 0]
+ [0 0]
+ [1 1]
+ [0 0]
+ [0 0]
+ [0 0]
+ [0 0]
+ [1 1]
+ [0 0]
+ [0 0]
+ [1 1]
+ [0 0]
+ [1 1]
+ [1 1]
+ [0 0]
+ [0 0]
+ [0 0]
+ [1 1]
+ [0 1]
+ [0 0]
+ [0 0]
+ [0 1]
+ [0 0]
+ [0 0]
+ [1 1]
+ [0 0]
+ [0 1]
+ [0 0]
+ [1 1]
+ [0 0]
+ [0 0]
+ [0 0]
+ [0 0]
+ [1 1]
+ [0 0]
+ [0 0]
+ [0 1]
+ [0 0]
+ [0 0]
+ [1 0]
+ [0 0]
+ [1 1]
+ [1 1]
+ [1 1]
+ [1 0]
+ [0 0]
+ [0 0]
+ [1 1]
+ [1 1]
+ [0 0]
+ [1 1]
+ [0 1]
+ [0 0]
+ [0 0]
+ [1 1]
+ [0 0]
+ [0 0]
+ [0 0]
+ [0 1]
+ [0 0]
+ [0 1]
+ [1 1]
+ [1 1]]
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{metrics} \PY{k+kn}{import} \PY{n}{confusion\PYZus{}matrix}\PY{p}{,} \PY{n}{accuracy\PYZus{}score}
+\PY{n}{cm}\PY{o}{=}\PY{n}{confusion\PYZus{}matrix}\PY{p}{(}\PY{n}{y\PYZus{}pred}\PY{p}{,}\PY{n}{y\PYZus{}test}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{cm}\PY{p}{)}
+\PY{n}{accuracy\PYZus{}score}\PY{p}{(}\PY{n}{y\PYZus{}pred}\PY{p}{,}\PY{n}{y\PYZus{}test}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[[66  8]
+ [ 2 24]]
+    \end{Verbatim}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+0.9
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \section{Practical 05: Implement KNN
+classifier}\label{practical-05-implement-knn-classifier}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+\PY{k+kn}{import} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k}{as} \PY{n+nn}{plt}
+\PY{k+kn}{import} \PY{n+nn}{pandas} \PY{k}{as} \PY{n+nn}{pd}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{dataset} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{/content/drive/MyDrive/Social\PYZus{}Network\PYZus{}Ads.csv}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{X} \PY{o}{=} \PY{n}{dataset}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{p}{:}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{.}\PY{n}{values}
+\PY{n}{y} \PY{o}{=} \PY{n}{dataset}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{.}\PY{n}{values}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{model\PYZus{}selection} \PY{k+kn}{import} \PY{n}{train\PYZus{}test\PYZus{}split}
+\PY{n}{X\PYZus{}train}\PY{p}{,}\PY{n}{x\PYZus{}test}\PY{p}{,}\PY{n}{y\PYZus{}train}\PY{p}{,}\PY{n}{y\PYZus{}test} \PY{o}{=} \PY{n}{train\PYZus{}test\PYZus{}split}\PY{p}{(}\PY{n}{X}\PY{p}{,}\PY{n}{y}\PY{p}{,}\PY{n}{test\PYZus{}size} \PY{o}{=} \PY{l+m+mf}{0.25}\PY{p}{,} \PY{n}{random\PYZus{}state} \PY{o}{=} \PY{l+m+mi}{0}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{X\PYZus{}train}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[[    44  39000]
+ [    32 120000]
+ [    38  50000]
+ [    32 135000]
+ [    52  21000]
+ [    53 104000]
+ [    39  42000]
+ [    38  61000]
+ [    36  50000]
+ [    36  63000]
+ [    35  25000]
+ [    35  50000]
+ [    42  73000]
+ [    47  49000]
+ [    59  29000]
+ [    49  65000]
+ [    45 131000]
+ [    31  89000]
+ [    46  82000]
+ [    47  51000]
+ [    26  15000]
+ [    60 102000]
+ [    38 112000]
+ [    40 107000]
+ [    42  53000]
+ [    35  59000]
+ [    48  41000]
+ [    48 134000]
+ [    38 113000]
+ [    29 148000]
+ [    26  15000]
+ [    60  42000]
+ [    24  19000]
+ [    42 149000]
+ [    46  96000]
+ [    28  59000]
+ [    39  96000]
+ [    28  89000]
+ [    41  72000]
+ [    45  26000]
+ [    33  69000]
+ [    20  82000]
+ [    31  74000]
+ [    42  80000]
+ [    35  72000]
+ [    33 149000]
+ [    40  71000]
+ [    51 146000]
+ [    46  79000]
+ [    35  75000]
+ [    38  51000]
+ [    36  75000]
+ [    37  78000]
+ [    38  61000]
+ [    60 108000]
+ [    20  82000]
+ [    57  74000]
+ [    42  65000]
+ [    26  80000]
+ [    46 117000]
+ [    35  61000]
+ [    21  68000]
+ [    28  44000]
+ [    41  87000]
+ [    37  33000]
+ [    27  90000]
+ [    39  42000]
+ [    28 123000]
+ [    31 118000]
+ [    25  87000]
+ [    35  71000]
+ [    37  70000]
+ [    35  39000]
+ [    47  23000]
+ [    35 147000]
+ [    48 138000]
+ [    26  86000]
+ [    25  79000]
+ [    52 138000]
+ [    51  23000]
+ [    35  60000]
+ [    33 113000]
+ [    30 107000]
+ [    48  33000]
+ [    41  80000]
+ [    48  96000]
+ [    31  18000]
+ [    31  71000]
+ [    43 129000]
+ [    59  76000]
+ [    18  44000]
+ [    36 118000]
+ [    42  90000]
+ [    47  30000]
+ [    26  43000]
+ [    40  78000]
+ [    46  59000]
+ [    59  42000]
+ [    46  74000]
+ [    35  91000]
+ [    28  59000]
+ [    40  57000]
+ [    59 143000]
+ [    57  26000]
+ [    52  38000]
+ [    47 113000]
+ [    53 143000]
+ [    35  27000]
+ [    58 101000]
+ [    45  45000]
+ [    23  82000]
+ [    46  23000]
+ [    42  65000]
+ [    28  84000]
+ [    38  59000]
+ [    26  84000]
+ [    29  28000]
+ [    37  71000]
+ [    22  55000]
+ [    48  35000]
+ [    49  28000]
+ [    38  65000]
+ [    27  17000]
+ [    46  28000]
+ [    48 141000]
+ [    26  17000]
+ [    35  97000]
+ [    39  59000]
+ [    24  27000]
+ [    32  18000]
+ [    46  88000]
+ [    35  58000]
+ [    56  60000]
+ [    47  34000]
+ [    40  72000]
+ [    32 100000]
+ [    19  21000]
+ [    25  90000]
+ [    35  88000]
+ [    28  32000]
+ [    50  20000]
+ [    40  59000]
+ [    50  44000]
+ [    35  72000]
+ [    40 142000]
+ [    46  32000]
+ [    39  71000]
+ [    20  74000]
+ [    29  75000]
+ [    31  76000]
+ [    47  25000]
+ [    40  61000]
+ [    34 112000]
+ [    38  80000]
+ [    42  75000]
+ [    47  47000]
+ [    39  75000]
+ [    19  25000]
+ [    37  80000]
+ [    36  60000]
+ [    41  52000]
+ [    36 125000]
+ [    48  29000]
+ [    36 126000]
+ [    51 134000]
+ [    27  57000]
+ [    38  71000]
+ [    39  61000]
+ [    22  27000]
+ [    33  60000]
+ [    48  74000]
+ [    58  23000]
+ [    53  72000]
+ [    32 117000]
+ [    54  70000]
+ [    30  80000]
+ [    58  95000]
+ [    26  52000]
+ [    45  79000]
+ [    24  55000]
+ [    40  75000]
+ [    33  28000]
+ [    44 139000]
+ [    22  18000]
+ [    33  51000]
+ [    43 133000]
+ [    24  32000]
+ [    46  22000]
+ [    35  55000]
+ [    54 104000]
+ [    48 119000]
+ [    35  53000]
+ [    37 144000]
+ [    23  66000]
+ [    37 137000]
+ [    31  58000]
+ [    33  41000]
+ [    45  22000]
+ [    30  15000]
+ [    19  19000]
+ [    49  74000]
+ [    39 122000]
+ [    35  73000]
+ [    39  71000]
+ [    24  23000]
+ [    41  72000]
+ [    29  83000]
+ [    54  26000]
+ [    35  44000]
+ [    37  75000]
+ [    29  47000]
+ [    31  68000]
+ [    42  54000]
+ [    30 135000]
+ [    52 114000]
+ [    50  36000]
+ [    56 133000]
+ [    29  61000]
+ [    30  89000]
+ [    26  16000]
+ [    33  31000]
+ [    41  72000]
+ [    36  33000]
+ [    55 125000]
+ [    48 131000]
+ [    41  71000]
+ [    30  62000]
+ [    37  72000]
+ [    41  63000]
+ [    58  47000]
+ [    30 116000]
+ [    20  49000]
+ [    37  74000]
+ [    41  59000]
+ [    49  89000]
+ [    28  79000]
+ [    53  82000]
+ [    40  57000]
+ [    60  34000]
+ [    35 108000]
+ [    21  72000]
+ [    38  71000]
+ [    39 106000]
+ [    37  57000]
+ [    26  72000]
+ [    35  23000]
+ [    54 108000]
+ [    30  17000]
+ [    39 134000]
+ [    29  43000]
+ [    33  43000]
+ [    35  38000]
+ [    41  45000]
+ [    41  72000]
+ [    39 134000]
+ [    27 137000]
+ [    21  16000]
+ [    26  32000]
+ [    31  66000]
+ [    39  73000]
+ [    41  79000]
+ [    47  50000]
+ [    41  30000]
+ [    37  93000]
+ [    60  46000]
+ [    25  22000]
+ [    28  37000]
+ [    38  55000]
+ [    36  54000]
+ [    20  36000]
+ [    56 104000]
+ [    40  57000]
+ [    42 108000]
+ [    20  23000]
+ [    40  65000]
+ [    47  20000]
+ [    18  86000]
+ [    35  79000]
+ [    57  33000]
+ [    34  72000]
+ [    49  39000]
+ [    27  31000]
+ [    19  70000]
+ [    39  79000]
+ [    26  81000]
+ [    25  80000]
+ [    28  85000]
+ [    55  39000]
+ [    50  88000]
+ [    49  88000]
+ [    52 150000]
+ [    35  65000]
+ [    42  54000]
+ [    34  43000]
+ [    37  52000]
+ [    48  30000]
+ [    29  43000]
+ [    36  52000]
+ [    27  54000]
+ [    26 118000]]
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{x\PYZus{}test}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[[    30  87000]
+ [    38  50000]
+ [    35  75000]
+ [    30  79000]
+ [    35  50000]
+ [    27  20000]
+ [    31  15000]
+ [    36 144000]
+ [    18  68000]
+ [    47  43000]
+ [    30  49000]
+ [    28  55000]
+ [    37  55000]
+ [    39  77000]
+ [    20  86000]
+ [    32 117000]
+ [    37  77000]
+ [    19  85000]
+ [    55 130000]
+ [    35  22000]
+ [    35  47000]
+ [    47 144000]
+ [    41  51000]
+ [    47 105000]
+ [    23  28000]
+ [    49 141000]
+ [    28  87000]
+ [    29  80000]
+ [    37  62000]
+ [    32  86000]
+ [    21  88000]
+ [    37  79000]
+ [    57  60000]
+ [    37  53000]
+ [    24  58000]
+ [    18  52000]
+ [    22  81000]
+ [    34  43000]
+ [    31  34000]
+ [    49  36000]
+ [    27  88000]
+ [    41  52000]
+ [    27  84000]
+ [    35  20000]
+ [    43 112000]
+ [    27  58000]
+ [    37  80000]
+ [    52  90000]
+ [    26  30000]
+ [    49  86000]
+ [    57 122000]
+ [    34  25000]
+ [    35  57000]
+ [    34 115000]
+ [    59  88000]
+ [    45  32000]
+ [    29  83000]
+ [    26  80000]
+ [    49  28000]
+ [    23  20000]
+ [    32  18000]
+ [    60  42000]
+ [    19  76000]
+ [    36  99000]
+ [    19  26000]
+ [    60  83000]
+ [    24  89000]
+ [    27  58000]
+ [    40  47000]
+ [    42  70000]
+ [    32 150000]
+ [    35  77000]
+ [    22  63000]
+ [    45  22000]
+ [    27  89000]
+ [    18  82000]
+ [    42  79000]
+ [    40  60000]
+ [    53  34000]
+ [    47 107000]
+ [    58 144000]
+ [    59  83000]
+ [    24  55000]
+ [    26  35000]
+ [    58  38000]
+ [    42  80000]
+ [    40  75000]
+ [    59 130000]
+ [    46  41000]
+ [    41  60000]
+ [    42  64000]
+ [    37 146000]
+ [    23  48000]
+ [    25  33000]
+ [    24  84000]
+ [    27  96000]
+ [    23  63000]
+ [    48  33000]
+ [    48  90000]
+ [    42 104000]]
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{y\PYZus{}train}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[0 1 0 1 1 1 0 0 0 0 0 0 1 1 1 0 1 0 0 1 0 1 0 1 0 0 1 1 1 1 0 1 0 1 0 0 1
+ 0 0 1 0 0 0 0 0 1 1 1 1 0 0 0 1 0 1 0 1 0 0 1 0 0 0 1 0 0 0 1 1 0 0 1 0 1
+ 1 1 0 0 1 1 0 0 1 1 0 1 0 0 1 1 0 1 1 1 0 0 0 0 0 1 0 0 1 1 1 1 1 0 1 1 0
+ 1 0 0 0 0 0 0 0 1 1 0 0 1 0 0 1 0 0 0 1 0 1 1 0 1 0 0 0 0 1 0 0 0 1 1 0 0
+ 0 0 1 0 1 0 0 0 1 0 0 0 0 1 1 1 0 0 0 0 0 0 1 1 1 1 1 0 1 0 0 0 0 0 1 0 0
+ 0 0 0 0 1 1 0 1 0 1 0 0 1 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 1 0 1 1 0 0 0 0 0
+ 0 1 1 0 0 0 0 1 0 0 0 0 1 0 1 0 1 0 0 0 1 0 0 0 1 0 1 0 0 0 0 0 1 1 0 0 0
+ 0 0 1 0 1 1 0 0 0 0 0 1 0 1 0 0 1 0 0 1 0 1 0 0 0 0 0 0 1 1 1 1 0 0 0 0 1
+ 0 0 0 0]
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{y\PYZus{}test}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 1 0 0 1 0 1 0 1 0 0 0 0 0 1 1 0 0 0 0
+ 0 0 1 0 0 0 0 1 0 0 1 0 1 1 0 0 0 1 1 0 0 1 0 0 1 0 1 0 1 0 0 0 0 1 0 0 1
+ 0 0 0 0 1 1 1 0 0 0 1 1 0 1 1 0 0 1 0 0 0 1 0 1 1 1]
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{preprocessing} \PY{k+kn}{import} \PY{n}{StandardScaler}
+\PY{n}{sc} \PY{o}{=} \PY{n}{StandardScaler}\PY{p}{(}\PY{p}{)}
+\PY{n}{X\PYZus{}train} \PY{o}{=} \PY{n}{sc}\PY{o}{.}\PY{n}{fit\PYZus{}transform}\PY{p}{(}\PY{n}{X\PYZus{}train}\PY{p}{)}
+\PY{n}{x\PYZus{}test} \PY{o}{=} \PY{n}{sc}\PY{o}{.}\PY{n}{transform}\PY{p}{(}\PY{n}{x\PYZus{}test}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{X\PYZus{}train}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[[ 0.58164944 -0.88670699]
+ [-0.60673761  1.46173768]
+ [-0.01254409 -0.5677824 ]
+ [-0.60673761  1.89663484]
+ [ 1.37390747 -1.40858358]
+ [ 1.47293972  0.99784738]
+ [ 0.08648817 -0.79972756]
+ [-0.01254409 -0.24885782]
+ [-0.21060859 -0.5677824 ]
+ [-0.21060859 -0.19087153]
+ [-0.30964085 -1.29261101]
+ [-0.30964085 -0.5677824 ]
+ [ 0.38358493  0.09905991]
+ [ 0.8787462  -0.59677555]
+ [ 2.06713324 -1.17663843]
+ [ 1.07681071 -0.13288524]
+ [ 0.68068169  1.78066227]
+ [-0.70576986  0.56295021]
+ [ 0.77971394  0.35999821]
+ [ 0.8787462  -0.53878926]
+ [-1.20093113 -1.58254245]
+ [ 2.1661655   0.93986109]
+ [-0.01254409  1.22979253]
+ [ 0.18552042  1.08482681]
+ [ 0.38358493 -0.48080297]
+ [-0.30964085 -0.30684411]
+ [ 0.97777845 -0.8287207 ]
+ [ 0.97777845  1.8676417 ]
+ [-0.01254409  1.25878567]
+ [-0.90383437  2.27354572]
+ [-1.20093113 -1.58254245]
+ [ 2.1661655  -0.79972756]
+ [-1.39899564 -1.46656987]
+ [ 0.38358493  2.30253886]
+ [ 0.77971394  0.76590222]
+ [-1.00286662 -0.30684411]
+ [ 0.08648817  0.76590222]
+ [-1.00286662  0.56295021]
+ [ 0.28455268  0.07006676]
+ [ 0.68068169 -1.26361786]
+ [-0.50770535 -0.01691267]
+ [-1.79512465  0.35999821]
+ [-0.70576986  0.12805305]
+ [ 0.38358493  0.30201192]
+ [-0.30964085  0.07006676]
+ [-0.50770535  2.30253886]
+ [ 0.18552042  0.04107362]
+ [ 1.27487521  2.21555943]
+ [ 0.77971394  0.27301877]
+ [-0.30964085  0.1570462 ]
+ [-0.01254409 -0.53878926]
+ [-0.21060859  0.1570462 ]
+ [-0.11157634  0.24402563]
+ [-0.01254409 -0.24885782]
+ [ 2.1661655   1.11381995]
+ [-1.79512465  0.35999821]
+ [ 1.86906873  0.12805305]
+ [ 0.38358493 -0.13288524]
+ [-1.20093113  0.30201192]
+ [ 0.77971394  1.37475825]
+ [-0.30964085 -0.24885782]
+ [-1.6960924  -0.04590581]
+ [-1.00286662 -0.74174127]
+ [ 0.28455268  0.50496393]
+ [-0.11157634 -1.06066585]
+ [-1.10189888  0.59194336]
+ [ 0.08648817 -0.79972756]
+ [-1.00286662  1.54871711]
+ [-0.70576986  1.40375139]
+ [-1.29996338  0.50496393]
+ [-0.30964085  0.04107362]
+ [-0.11157634  0.01208048]
+ [-0.30964085 -0.88670699]
+ [ 0.8787462  -1.3505973 ]
+ [-0.30964085  2.24455257]
+ [ 0.97777845  1.98361427]
+ [-1.20093113  0.47597078]
+ [-1.29996338  0.27301877]
+ [ 1.37390747  1.98361427]
+ [ 1.27487521 -1.3505973 ]
+ [-0.30964085 -0.27785096]
+ [-0.50770535  1.25878567]
+ [-0.80480212  1.08482681]
+ [ 0.97777845 -1.06066585]
+ [ 0.28455268  0.30201192]
+ [ 0.97777845  0.76590222]
+ [-0.70576986 -1.49556302]
+ [-0.70576986  0.04107362]
+ [ 0.48261718  1.72267598]
+ [ 2.06713324  0.18603934]
+ [-1.99318916 -0.74174127]
+ [-0.21060859  1.40375139]
+ [ 0.38358493  0.59194336]
+ [ 0.8787462  -1.14764529]
+ [-1.20093113 -0.77073441]
+ [ 0.18552042  0.24402563]
+ [ 0.77971394 -0.30684411]
+ [ 2.06713324 -0.79972756]
+ [ 0.77971394  0.12805305]
+ [-0.30964085  0.6209365 ]
+ [-1.00286662 -0.30684411]
+ [ 0.18552042 -0.3648304 ]
+ [ 2.06713324  2.12857999]
+ [ 1.86906873 -1.26361786]
+ [ 1.37390747 -0.91570013]
+ [ 0.8787462   1.25878567]
+ [ 1.47293972  2.12857999]
+ [-0.30964085 -1.23462472]
+ [ 1.96810099  0.91086794]
+ [ 0.68068169 -0.71274813]
+ [-1.49802789  0.35999821]
+ [ 0.77971394 -1.3505973 ]
+ [ 0.38358493 -0.13288524]
+ [-1.00286662  0.41798449]
+ [-0.01254409 -0.30684411]
+ [-1.20093113  0.41798449]
+ [-0.90383437 -1.20563157]
+ [-0.11157634  0.04107362]
+ [-1.59706014 -0.42281668]
+ [ 0.97777845 -1.00267957]
+ [ 1.07681071 -1.20563157]
+ [-0.01254409 -0.13288524]
+ [-1.10189888 -1.52455616]
+ [ 0.77971394 -1.20563157]
+ [ 0.97777845  2.07059371]
+ [-1.20093113 -1.52455616]
+ [-0.30964085  0.79489537]
+ [ 0.08648817 -0.30684411]
+ [-1.39899564 -1.23462472]
+ [-0.60673761 -1.49556302]
+ [ 0.77971394  0.53395707]
+ [-0.30964085 -0.33583725]
+ [ 1.77003648 -0.27785096]
+ [ 0.8787462  -1.03167271]
+ [ 0.18552042  0.07006676]
+ [-0.60673761  0.8818748 ]
+ [-1.89415691 -1.40858358]
+ [-1.29996338  0.59194336]
+ [-0.30964085  0.53395707]
+ [-1.00286662 -1.089659  ]
+ [ 1.17584296 -1.43757673]
+ [ 0.18552042 -0.30684411]
+ [ 1.17584296 -0.74174127]
+ [-0.30964085  0.07006676]
+ [ 0.18552042  2.09958685]
+ [ 0.77971394 -1.089659  ]
+ [ 0.08648817  0.04107362]
+ [-1.79512465  0.12805305]
+ [-0.90383437  0.1570462 ]
+ [-0.70576986  0.18603934]
+ [ 0.8787462  -1.29261101]
+ [ 0.18552042 -0.24885782]
+ [-0.4086731   1.22979253]
+ [-0.01254409  0.30201192]
+ [ 0.38358493  0.1570462 ]
+ [ 0.8787462  -0.65476184]
+ [ 0.08648817  0.1570462 ]
+ [-1.89415691 -1.29261101]
+ [-0.11157634  0.30201192]
+ [-0.21060859 -0.27785096]
+ [ 0.28455268 -0.50979612]
+ [-0.21060859  1.6067034 ]
+ [ 0.97777845 -1.17663843]
+ [-0.21060859  1.63569655]
+ [ 1.27487521  1.8676417 ]
+ [-1.10189888 -0.3648304 ]
+ [-0.01254409  0.04107362]
+ [ 0.08648817 -0.24885782]
+ [-1.59706014 -1.23462472]
+ [-0.50770535 -0.27785096]
+ [ 0.97777845  0.12805305]
+ [ 1.96810099 -1.3505973 ]
+ [ 1.47293972  0.07006676]
+ [-0.60673761  1.37475825]
+ [ 1.57197197  0.01208048]
+ [-0.80480212  0.30201192]
+ [ 1.96810099  0.73690908]
+ [-1.20093113 -0.50979612]
+ [ 0.68068169  0.27301877]
+ [-1.39899564 -0.42281668]
+ [ 0.18552042  0.1570462 ]
+ [-0.50770535 -1.20563157]
+ [ 0.58164944  2.01260742]
+ [-1.59706014 -1.49556302]
+ [-0.50770535 -0.53878926]
+ [ 0.48261718  1.83864855]
+ [-1.39899564 -1.089659  ]
+ [ 0.77971394 -1.37959044]
+ [-0.30964085 -0.42281668]
+ [ 1.57197197  0.99784738]
+ [ 0.97777845  1.43274454]
+ [-0.30964085 -0.48080297]
+ [-0.11157634  2.15757314]
+ [-1.49802789 -0.1038921 ]
+ [-0.11157634  1.95462113]
+ [-0.70576986 -0.33583725]
+ [-0.50770535 -0.8287207 ]
+ [ 0.68068169 -1.37959044]
+ [-0.80480212 -1.58254245]
+ [-1.89415691 -1.46656987]
+ [ 1.07681071  0.12805305]
+ [ 0.08648817  1.51972397]
+ [-0.30964085  0.09905991]
+ [ 0.08648817  0.04107362]
+ [-1.39899564 -1.3505973 ]
+ [ 0.28455268  0.07006676]
+ [-0.90383437  0.38899135]
+ [ 1.57197197 -1.26361786]
+ [-0.30964085 -0.74174127]
+ [-0.11157634  0.1570462 ]
+ [-0.90383437 -0.65476184]
+ [-0.70576986 -0.04590581]
+ [ 0.38358493 -0.45180983]
+ [-0.80480212  1.89663484]
+ [ 1.37390747  1.28777882]
+ [ 1.17584296 -0.97368642]
+ [ 1.77003648  1.83864855]
+ [-0.90383437 -0.24885782]
+ [-0.80480212  0.56295021]
+ [-1.20093113 -1.5535493 ]
+ [-0.50770535 -1.11865214]
+ [ 0.28455268  0.07006676]
+ [-0.21060859 -1.06066585]
+ [ 1.67100423  1.6067034 ]
+ [ 0.97777845  1.78066227]
+ [ 0.28455268  0.04107362]
+ [-0.80480212 -0.21986468]
+ [-0.11157634  0.07006676]
+ [ 0.28455268 -0.19087153]
+ [ 1.96810099 -0.65476184]
+ [-0.80480212  1.3457651 ]
+ [-1.79512465 -0.59677555]
+ [-0.11157634  0.12805305]
+ [ 0.28455268 -0.30684411]
+ [ 1.07681071  0.56295021]
+ [-1.00286662  0.27301877]
+ [ 1.47293972  0.35999821]
+ [ 0.18552042 -0.3648304 ]
+ [ 2.1661655  -1.03167271]
+ [-0.30964085  1.11381995]
+ [-1.6960924   0.07006676]
+ [-0.01254409  0.04107362]
+ [ 0.08648817  1.05583366]
+ [-0.11157634 -0.3648304 ]
+ [-1.20093113  0.07006676]
+ [-0.30964085 -1.3505973 ]
+ [ 1.57197197  1.11381995]
+ [-0.80480212 -1.52455616]
+ [ 0.08648817  1.8676417 ]
+ [-0.90383437 -0.77073441]
+ [-0.50770535 -0.77073441]
+ [-0.30964085 -0.91570013]
+ [ 0.28455268 -0.71274813]
+ [ 0.28455268  0.07006676]
+ [ 0.08648817  1.8676417 ]
+ [-1.10189888  1.95462113]
+ [-1.6960924  -1.5535493 ]
+ [-1.20093113 -1.089659  ]
+ [-0.70576986 -0.1038921 ]
+ [ 0.08648817  0.09905991]
+ [ 0.28455268  0.27301877]
+ [ 0.8787462  -0.5677824 ]
+ [ 0.28455268 -1.14764529]
+ [-0.11157634  0.67892279]
+ [ 2.1661655  -0.68375498]
+ [-1.29996338 -1.37959044]
+ [-1.00286662 -0.94469328]
+ [-0.01254409 -0.42281668]
+ [-0.21060859 -0.45180983]
+ [-1.79512465 -0.97368642]
+ [ 1.77003648  0.99784738]
+ [ 0.18552042 -0.3648304 ]
+ [ 0.38358493  1.11381995]
+ [-1.79512465 -1.3505973 ]
+ [ 0.18552042 -0.13288524]
+ [ 0.8787462  -1.43757673]
+ [-1.99318916  0.47597078]
+ [-0.30964085  0.27301877]
+ [ 1.86906873 -1.06066585]
+ [-0.4086731   0.07006676]
+ [ 1.07681071 -0.88670699]
+ [-1.10189888 -1.11865214]
+ [-1.89415691  0.01208048]
+ [ 0.08648817  0.27301877]
+ [-1.20093113  0.33100506]
+ [-1.29996338  0.30201192]
+ [-1.00286662  0.44697764]
+ [ 1.67100423 -0.88670699]
+ [ 1.17584296  0.53395707]
+ [ 1.07681071  0.53395707]
+ [ 1.37390747  2.331532  ]
+ [-0.30964085 -0.13288524]
+ [ 0.38358493 -0.45180983]
+ [-0.4086731  -0.77073441]
+ [-0.11157634 -0.50979612]
+ [ 0.97777845 -1.14764529]
+ [-0.90383437 -0.77073441]
+ [-0.21060859 -0.50979612]
+ [-1.10189888 -0.45180983]
+ [-1.20093113  1.40375139]]
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{x\PYZus{}test}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[[-0.80480212  0.50496393]
+ [-0.01254409 -0.5677824 ]
+ [-0.30964085  0.1570462 ]
+ [-0.80480212  0.27301877]
+ [-0.30964085 -0.5677824 ]
+ [-1.10189888 -1.43757673]
+ [-0.70576986 -1.58254245]
+ [-0.21060859  2.15757314]
+ [-1.99318916 -0.04590581]
+ [ 0.8787462  -0.77073441]
+ [-0.80480212 -0.59677555]
+ [-1.00286662 -0.42281668]
+ [-0.11157634 -0.42281668]
+ [ 0.08648817  0.21503249]
+ [-1.79512465  0.47597078]
+ [-0.60673761  1.37475825]
+ [-0.11157634  0.21503249]
+ [-1.89415691  0.44697764]
+ [ 1.67100423  1.75166912]
+ [-0.30964085 -1.37959044]
+ [-0.30964085 -0.65476184]
+ [ 0.8787462   2.15757314]
+ [ 0.28455268 -0.53878926]
+ [ 0.8787462   1.02684052]
+ [-1.49802789 -1.20563157]
+ [ 1.07681071  2.07059371]
+ [-1.00286662  0.50496393]
+ [-0.90383437  0.30201192]
+ [-0.11157634 -0.21986468]
+ [-0.60673761  0.47597078]
+ [-1.6960924   0.53395707]
+ [-0.11157634  0.27301877]
+ [ 1.86906873 -0.27785096]
+ [-0.11157634 -0.48080297]
+ [-1.39899564 -0.33583725]
+ [-1.99318916 -0.50979612]
+ [-1.59706014  0.33100506]
+ [-0.4086731  -0.77073441]
+ [-0.70576986 -1.03167271]
+ [ 1.07681071 -0.97368642]
+ [-1.10189888  0.53395707]
+ [ 0.28455268 -0.50979612]
+ [-1.10189888  0.41798449]
+ [-0.30964085 -1.43757673]
+ [ 0.48261718  1.22979253]
+ [-1.10189888 -0.33583725]
+ [-0.11157634  0.30201192]
+ [ 1.37390747  0.59194336]
+ [-1.20093113 -1.14764529]
+ [ 1.07681071  0.47597078]
+ [ 1.86906873  1.51972397]
+ [-0.4086731  -1.29261101]
+ [-0.30964085 -0.3648304 ]
+ [-0.4086731   1.31677196]
+ [ 2.06713324  0.53395707]
+ [ 0.68068169 -1.089659  ]
+ [-0.90383437  0.38899135]
+ [-1.20093113  0.30201192]
+ [ 1.07681071 -1.20563157]
+ [-1.49802789 -1.43757673]
+ [-0.60673761 -1.49556302]
+ [ 2.1661655  -0.79972756]
+ [-1.89415691  0.18603934]
+ [-0.21060859  0.85288166]
+ [-1.89415691 -1.26361786]
+ [ 2.1661655   0.38899135]
+ [-1.39899564  0.56295021]
+ [-1.10189888 -0.33583725]
+ [ 0.18552042 -0.65476184]
+ [ 0.38358493  0.01208048]
+ [-0.60673761  2.331532  ]
+ [-0.30964085  0.21503249]
+ [-1.59706014 -0.19087153]
+ [ 0.68068169 -1.37959044]
+ [-1.10189888  0.56295021]
+ [-1.99318916  0.35999821]
+ [ 0.38358493  0.27301877]
+ [ 0.18552042 -0.27785096]
+ [ 1.47293972 -1.03167271]
+ [ 0.8787462   1.08482681]
+ [ 1.96810099  2.15757314]
+ [ 2.06713324  0.38899135]
+ [-1.39899564 -0.42281668]
+ [-1.20093113 -1.00267957]
+ [ 1.96810099 -0.91570013]
+ [ 0.38358493  0.30201192]
+ [ 0.18552042  0.1570462 ]
+ [ 2.06713324  1.75166912]
+ [ 0.77971394 -0.8287207 ]
+ [ 0.28455268 -0.27785096]
+ [ 0.38358493 -0.16187839]
+ [-0.11157634  2.21555943]
+ [-1.49802789 -0.62576869]
+ [-1.29996338 -1.06066585]
+ [-1.39899564  0.41798449]
+ [-1.10189888  0.76590222]
+ [-1.49802789 -0.19087153]
+ [ 0.97777845 -1.06066585]
+ [ 0.97777845  0.59194336]
+ [ 0.38358493  0.99784738]]
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{neighbors} \PY{k+kn}{import} \PY{n}{KNeighborsClassifier}
+\PY{n}{classifier} \PY{o}{=} \PY{n}{KNeighborsClassifier}\PY{p}{(}\PY{n}{n\PYZus{}neighbors} \PY{o}{=} \PY{l+m+mi}{5}\PY{p}{,} \PY{n}{metric} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{minkowski}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{p}\PY{o}{=}\PY{l+m+mi}{2}\PY{p}{)}
+\PY{n}{classifier}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X\PYZus{}train}\PY{p}{,}\PY{n}{y\PYZus{}train}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+KNeighborsClassifier()
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{classifier}\PY{o}{.}\PY{n}{predict}\PY{p}{(}\PY{n}{sc}\PY{o}{.}\PY{n}{transform}\PY{p}{(}\PY{p}{[}\PY{p}{[}\PY{l+m+mi}{40}\PY{p}{,}\PY{l+m+mi}{200000}\PY{p}{]}\PY{p}{]}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[1]
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{y\PYZus{}pred} \PY{o}{=} \PY{n}{classifier}\PY{o}{.}\PY{n}{predict}\PY{p}{(}\PY{n}{x\PYZus{}test}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{concatenate}\PY{p}{(}\PY{p}{(}\PY{n}{y\PYZus{}pred}\PY{o}{.}\PY{n}{reshape}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{y\PYZus{}pred}\PY{p}{)}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{,}\PY{n}{y\PYZus{}test}\PY{o}{.}\PY{n}{reshape}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{y\PYZus{}test}\PY{p}{)}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{)}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[[0 0]
+ [0 0]
+ [0 0]
+ [0 0]
+ [0 0]
+ [0 0]
+ [0 0]
+ [1 1]
+ [0 0]
+ [1 0]
+ [0 0]
+ [0 0]
+ [0 0]
+ [0 0]
+ [0 0]
+ [1 0]
+ [0 0]
+ [0 0]
+ [1 1]
+ [0 0]
+ [0 0]
+ [1 1]
+ [0 0]
+ [1 1]
+ [0 0]
+ [1 1]
+ [0 0]
+ [0 0]
+ [0 0]
+ [0 0]
+ [0 0]
+ [0 1]
+ [1 1]
+ [0 0]
+ [0 0]
+ [0 0]
+ [0 0]
+ [0 0]
+ [0 0]
+ [1 1]
+ [0 0]
+ [0 0]
+ [0 0]
+ [0 0]
+ [1 1]
+ [0 0]
+ [0 0]
+ [1 1]
+ [0 0]
+ [1 1]
+ [1 1]
+ [0 0]
+ [0 0]
+ [1 0]
+ [1 1]
+ [1 1]
+ [0 0]
+ [0 0]
+ [1 1]
+ [0 0]
+ [0 0]
+ [1 1]
+ [0 0]
+ [1 1]
+ [0 0]
+ [1 1]
+ [0 0]
+ [0 0]
+ [0 0]
+ [0 0]
+ [1 1]
+ [0 0]
+ [0 0]
+ [1 1]
+ [0 0]
+ [0 0]
+ [0 0]
+ [0 0]
+ [1 1]
+ [1 1]
+ [1 1]
+ [1 0]
+ [0 0]
+ [0 0]
+ [1 1]
+ [0 1]
+ [0 0]
+ [1 1]
+ [1 1]
+ [0 0]
+ [0 0]
+ [1 1]
+ [0 0]
+ [0 0]
+ [0 0]
+ [0 1]
+ [0 0]
+ [1 1]
+ [1 1]
+ [1 1]]
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{metrics} \PY{k+kn}{import} \PY{n}{confusion\PYZus{}matrix}\PY{p}{,} \PY{n}{accuracy\PYZus{}score}
+\PY{n}{cm} \PY{o}{=} \PY{n}{confusion\PYZus{}matrix}\PY{p}{(}\PY{n}{y\PYZus{}pred}\PY{p}{,} \PY{n}{y\PYZus{}test}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{cm}\PY{p}{)}
+\PY{n}{accuracy\PYZus{}score}\PY{p}{(}\PY{n}{y\PYZus{}pred}\PY{p}{,} \PY{n}{y\PYZus{}test}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[[64  3]
+ [ 4 29]]
+    \end{Verbatim}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+0.93
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \section{Practical 06: Implement K-means
+Clsutering}\label{practical-06-implement-k-means-clsutering}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{2}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+\PY{k+kn}{import} \PY{n+nn}{pandas} \PY{k}{as} \PY{n+nn}{pd}
+\PY{k+kn}{import} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k}{as} \PY{n+nn}{plt}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{3}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{data} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{/content/drive/MyDrive/MSC CS/SEM 3/1. Machine Learning \PYZam{} Deep Learning/Practicals/8. K\PYZhy{}Means Clustering/Mall\PYZus{}Customers.csv}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{x}\PY{o}{=}\PY{n}{data}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{p}{[}\PY{l+m+mi}{3}\PY{p}{,}\PY{l+m+mi}{4}\PY{p}{]}\PY{p}{]}\PY{o}{.}\PY{n}{values}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{4}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{x}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[[ 15  39]
+ [ 15  81]
+ [ 16   6]
+ [ 16  77]
+ [ 17  40]
+ [ 17  76]
+ [ 18   6]
+ [ 18  94]
+ [ 19   3]
+ [ 19  72]
+ [ 19  14]
+ [ 19  99]
+ [ 20  15]
+ [ 20  77]
+ [ 20  13]
+ [ 20  79]
+ [ 21  35]
+ [ 21  66]
+ [ 23  29]
+ [ 23  98]
+ [ 24  35]
+ [ 24  73]
+ [ 25   5]
+ [ 25  73]
+ [ 28  14]
+ [ 28  82]
+ [ 28  32]
+ [ 28  61]
+ [ 29  31]
+ [ 29  87]
+ [ 30   4]
+ [ 30  73]
+ [ 33   4]
+ [ 33  92]
+ [ 33  14]
+ [ 33  81]
+ [ 34  17]
+ [ 34  73]
+ [ 37  26]
+ [ 37  75]
+ [ 38  35]
+ [ 38  92]
+ [ 39  36]
+ [ 39  61]
+ [ 39  28]
+ [ 39  65]
+ [ 40  55]
+ [ 40  47]
+ [ 40  42]
+ [ 40  42]
+ [ 42  52]
+ [ 42  60]
+ [ 43  54]
+ [ 43  60]
+ [ 43  45]
+ [ 43  41]
+ [ 44  50]
+ [ 44  46]
+ [ 46  51]
+ [ 46  46]
+ [ 46  56]
+ [ 46  55]
+ [ 47  52]
+ [ 47  59]
+ [ 48  51]
+ [ 48  59]
+ [ 48  50]
+ [ 48  48]
+ [ 48  59]
+ [ 48  47]
+ [ 49  55]
+ [ 49  42]
+ [ 50  49]
+ [ 50  56]
+ [ 54  47]
+ [ 54  54]
+ [ 54  53]
+ [ 54  48]
+ [ 54  52]
+ [ 54  42]
+ [ 54  51]
+ [ 54  55]
+ [ 54  41]
+ [ 54  44]
+ [ 54  57]
+ [ 54  46]
+ [ 57  58]
+ [ 57  55]
+ [ 58  60]
+ [ 58  46]
+ [ 59  55]
+ [ 59  41]
+ [ 60  49]
+ [ 60  40]
+ [ 60  42]
+ [ 60  52]
+ [ 60  47]
+ [ 60  50]
+ [ 61  42]
+ [ 61  49]
+ [ 62  41]
+ [ 62  48]
+ [ 62  59]
+ [ 62  55]
+ [ 62  56]
+ [ 62  42]
+ [ 63  50]
+ [ 63  46]
+ [ 63  43]
+ [ 63  48]
+ [ 63  52]
+ [ 63  54]
+ [ 64  42]
+ [ 64  46]
+ [ 65  48]
+ [ 65  50]
+ [ 65  43]
+ [ 65  59]
+ [ 67  43]
+ [ 67  57]
+ [ 67  56]
+ [ 67  40]
+ [ 69  58]
+ [ 69  91]
+ [ 70  29]
+ [ 70  77]
+ [ 71  35]
+ [ 71  95]
+ [ 71  11]
+ [ 71  75]
+ [ 71   9]
+ [ 71  75]
+ [ 72  34]
+ [ 72  71]
+ [ 73   5]
+ [ 73  88]
+ [ 73   7]
+ [ 73  73]
+ [ 74  10]
+ [ 74  72]
+ [ 75   5]
+ [ 75  93]
+ [ 76  40]
+ [ 76  87]
+ [ 77  12]
+ [ 77  97]
+ [ 77  36]
+ [ 77  74]
+ [ 78  22]
+ [ 78  90]
+ [ 78  17]
+ [ 78  88]
+ [ 78  20]
+ [ 78  76]
+ [ 78  16]
+ [ 78  89]
+ [ 78   1]
+ [ 78  78]
+ [ 78   1]
+ [ 78  73]
+ [ 79  35]
+ [ 79  83]
+ [ 81   5]
+ [ 81  93]
+ [ 85  26]
+ [ 85  75]
+ [ 86  20]
+ [ 86  95]
+ [ 87  27]
+ [ 87  63]
+ [ 87  13]
+ [ 87  75]
+ [ 87  10]
+ [ 87  92]
+ [ 88  13]
+ [ 88  86]
+ [ 88  15]
+ [ 88  69]
+ [ 93  14]
+ [ 93  90]
+ [ 97  32]
+ [ 97  86]
+ [ 98  15]
+ [ 98  88]
+ [ 99  39]
+ [ 99  97]
+ [101  24]
+ [101  68]
+ [103  17]
+ [103  85]
+ [103  23]
+ [103  69]
+ [113   8]
+ [113  91]
+ [120  16]
+ [120  79]
+ [126  28]
+ [126  74]
+ [137  18]
+ [137  83]]
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{5}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{cluster} \PY{k+kn}{import} \PY{n}{KMeans}
+\PY{n}{kmeans} \PY{o}{=} \PY{n}{KMeans}\PY{p}{(}\PY{n}{n\PYZus{}clusters} \PY{o}{=} \PY{l+m+mi}{5}\PY{p}{,} \PY{n}{init} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{k\PYZhy{}means++}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{random\PYZus{}state} \PY{o}{=} \PY{l+m+mi}{42}\PY{p}{)}
+\PY{n}{y\PYZus{}kmeans} \PY{o}{=} \PY{n}{kmeans}\PY{o}{.}\PY{n}{fit\PYZus{}predict}\PY{p}{(}\PY{n}{x}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{y\PYZus{}kmeans}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2
+ 3 2 3 2 3 2 0 2 3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+ 0 0 0 0 0 0 0 0 0 0 0 0 4 1 4 0 4 1 4 1 4 0 4 1 4 1 4 1 4 1 4 0 4 1 4 1 4
+ 1 4 1 4 1 4 1 4 1 4 1 4 1 4 1 4 1 4 1 4 1 4 1 4 1 4 1 4 1 4 1 4 1 4 1 4 1
+ 4 1 4 1 4 1 4 1 4 1 4 1 4 1 4]
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+/usr/local/lib/python3.10/dist-packages/sklearn/cluster/\_kmeans.py:870:
+FutureWarning: The default value of `n\_init` will change from 10 to 'auto' in
+1.4. Set the value of `n\_init` explicitly to suppress the warning
+  warnings.warn(
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{6}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{plt}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{n}{x}\PY{p}{[}\PY{n}{y\PYZus{}kmeans} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}\PY{n}{x}\PY{p}{[}\PY{n}{y\PYZus{}kmeans} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,} \PY{n}{s}\PY{o}{=}\PY{l+m+mi}{100}\PY{p}{,} \PY{n}{c} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{red}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{label} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Clusters 1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{n}{x}\PY{p}{[}\PY{n}{y\PYZus{}kmeans} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}\PY{n}{x}\PY{p}{[}\PY{n}{y\PYZus{}kmeans} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,} \PY{n}{s}\PY{o}{=}\PY{l+m+mi}{100}\PY{p}{,} \PY{n}{c} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{blue}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{label} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Clusters 2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{n}{x}\PY{p}{[}\PY{n}{y\PYZus{}kmeans} \PY{o}{==} \PY{l+m+mi}{2}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}\PY{n}{x}\PY{p}{[}\PY{n}{y\PYZus{}kmeans} \PY{o}{==} \PY{l+m+mi}{2}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,} \PY{n}{s}\PY{o}{=}\PY{l+m+mi}{100}\PY{p}{,} \PY{n}{c} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{green}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{label} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Clusters 3}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{n}{x}\PY{p}{[}\PY{n}{y\PYZus{}kmeans} \PY{o}{==} \PY{l+m+mi}{3}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}\PY{n}{x}\PY{p}{[}\PY{n}{y\PYZus{}kmeans} \PY{o}{==} \PY{l+m+mi}{3}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,} \PY{n}{s}\PY{o}{=}\PY{l+m+mi}{100}\PY{p}{,} \PY{n}{c} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{cyan}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{label} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Clusters 4}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{n}{x}\PY{p}{[}\PY{n}{y\PYZus{}kmeans} \PY{o}{==} \PY{l+m+mi}{4}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}\PY{n}{x}\PY{p}{[}\PY{n}{y\PYZus{}kmeans} \PY{o}{==} \PY{l+m+mi}{4}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,} \PY{n}{s}\PY{o}{=}\PY{l+m+mi}{100}\PY{p}{,} \PY{n}{c} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{magenta}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{label} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Clusters 5}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{n}{kmeans}\PY{o}{.}\PY{n}{cluster\PYZus{}centers\PYZus{}}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,} \PY{n}{kmeans}\PY{o}{.}\PY{n}{cluster\PYZus{}centers\PYZus{}}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,} \PY{n}{s}\PY{o}{=}\PY{l+m+mi}{100}\PY{p}{,} \PY{n}{c}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{yellow}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{label} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Centroid}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Clusters of customers}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Annual income(k\PYZdl{})}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Spending Score (1 \PYZhy{} 100)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{legend}\PY{p}{(}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_101_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \section{Practical 07: Implement Hierarchical
+clustering}\label{practical-07-implement-hierarchical-clustering}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{26}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+\PY{k+kn}{import} \PY{n+nn}{pandas} \PY{k}{as} \PY{n+nn}{pd}
+\PY{k+kn}{import} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k}{as} \PY{n+nn}{plt}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{27}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{data} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{/content/drive/MyDrive/Mall\PYZus{}Customers.csv}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{x}\PY{o}{=}\PY{n}{data}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{p}{[}\PY{l+m+mi}{3}\PY{p}{,}\PY{l+m+mi}{4}\PY{p}{]}\PY{p}{]}\PY{o}{.}\PY{n}{values}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{28}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{x}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[[ 15  39]
+ [ 15  81]
+ [ 16   6]
+ [ 16  77]
+ [ 17  40]
+ [ 17  76]
+ [ 18   6]
+ [ 18  94]
+ [ 19   3]
+ [ 19  72]
+ [ 19  14]
+ [ 19  99]
+ [ 20  15]
+ [ 20  77]
+ [ 20  13]
+ [ 20  79]
+ [ 21  35]
+ [ 21  66]
+ [ 23  29]
+ [ 23  98]
+ [ 24  35]
+ [ 24  73]
+ [ 25   5]
+ [ 25  73]
+ [ 28  14]
+ [ 28  82]
+ [ 28  32]
+ [ 28  61]
+ [ 29  31]
+ [ 29  87]
+ [ 30   4]
+ [ 30  73]
+ [ 33   4]
+ [ 33  92]
+ [ 33  14]
+ [ 33  81]
+ [ 34  17]
+ [ 34  73]
+ [ 37  26]
+ [ 37  75]
+ [ 38  35]
+ [ 38  92]
+ [ 39  36]
+ [ 39  61]
+ [ 39  28]
+ [ 39  65]
+ [ 40  55]
+ [ 40  47]
+ [ 40  42]
+ [ 40  42]
+ [ 42  52]
+ [ 42  60]
+ [ 43  54]
+ [ 43  60]
+ [ 43  45]
+ [ 43  41]
+ [ 44  50]
+ [ 44  46]
+ [ 46  51]
+ [ 46  46]
+ [ 46  56]
+ [ 46  55]
+ [ 47  52]
+ [ 47  59]
+ [ 48  51]
+ [ 48  59]
+ [ 48  50]
+ [ 48  48]
+ [ 48  59]
+ [ 48  47]
+ [ 49  55]
+ [ 49  42]
+ [ 50  49]
+ [ 50  56]
+ [ 54  47]
+ [ 54  54]
+ [ 54  53]
+ [ 54  48]
+ [ 54  52]
+ [ 54  42]
+ [ 54  51]
+ [ 54  55]
+ [ 54  41]
+ [ 54  44]
+ [ 54  57]
+ [ 54  46]
+ [ 57  58]
+ [ 57  55]
+ [ 58  60]
+ [ 58  46]
+ [ 59  55]
+ [ 59  41]
+ [ 60  49]
+ [ 60  40]
+ [ 60  42]
+ [ 60  52]
+ [ 60  47]
+ [ 60  50]
+ [ 61  42]
+ [ 61  49]
+ [ 62  41]
+ [ 62  48]
+ [ 62  59]
+ [ 62  55]
+ [ 62  56]
+ [ 62  42]
+ [ 63  50]
+ [ 63  46]
+ [ 63  43]
+ [ 63  48]
+ [ 63  52]
+ [ 63  54]
+ [ 64  42]
+ [ 64  46]
+ [ 65  48]
+ [ 65  50]
+ [ 65  43]
+ [ 65  59]
+ [ 67  43]
+ [ 67  57]
+ [ 67  56]
+ [ 67  40]
+ [ 69  58]
+ [ 69  91]
+ [ 70  29]
+ [ 70  77]
+ [ 71  35]
+ [ 71  95]
+ [ 71  11]
+ [ 71  75]
+ [ 71   9]
+ [ 71  75]
+ [ 72  34]
+ [ 72  71]
+ [ 73   5]
+ [ 73  88]
+ [ 73   7]
+ [ 73  73]
+ [ 74  10]
+ [ 74  72]
+ [ 75   5]
+ [ 75  93]
+ [ 76  40]
+ [ 76  87]
+ [ 77  12]
+ [ 77  97]
+ [ 77  36]
+ [ 77  74]
+ [ 78  22]
+ [ 78  90]
+ [ 78  17]
+ [ 78  88]
+ [ 78  20]
+ [ 78  76]
+ [ 78  16]
+ [ 78  89]
+ [ 78   1]
+ [ 78  78]
+ [ 78   1]
+ [ 78  73]
+ [ 79  35]
+ [ 79  83]
+ [ 81   5]
+ [ 81  93]
+ [ 85  26]
+ [ 85  75]
+ [ 86  20]
+ [ 86  95]
+ [ 87  27]
+ [ 87  63]
+ [ 87  13]
+ [ 87  75]
+ [ 87  10]
+ [ 87  92]
+ [ 88  13]
+ [ 88  86]
+ [ 88  15]
+ [ 88  69]
+ [ 93  14]
+ [ 93  90]
+ [ 97  32]
+ [ 97  86]
+ [ 98  15]
+ [ 98  88]
+ [ 99  39]
+ [ 99  97]
+ [101  24]
+ [101  68]
+ [103  17]
+ [103  85]
+ [103  23]
+ [103  69]
+ [113   8]
+ [113  91]
+ [120  16]
+ [120  79]
+ [126  28]
+ [126  74]
+ [137  18]
+ [137  83]]
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{29}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{cluster} \PY{k+kn}{import} \PY{n}{AgglomerativeClustering} \PY{k}{as} \PY{n}{AC}
+\PY{n}{hc} \PY{o}{=} \PY{n}{AC}\PY{p}{(}\PY{n}{n\PYZus{}clusters} \PY{o}{=} \PY{l+m+mi}{5}\PY{p}{,} \PY{n}{affinity} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{euclidean}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{linkage} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ward}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{y\PYZus{}hc} \PY{o}{=} \PY{n}{hc}\PY{o}{.}\PY{n}{fit\PYZus{}predict}\PY{p}{(}\PY{n}{x}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{y\PYZus{}hc}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[4 3 4 3 4 3 4 3 4 3 4 3 4 3 4 3 4 3 4 3 4 3 4 3 4 3 4 3 4 3 4 3 4 3 4 3 4
+ 3 4 3 4 3 4 1 4 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+ 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+ 1 1 1 1 1 1 1 1 1 1 1 1 2 1 2 1 2 0 2 0 2 1 2 0 2 0 2 0 2 0 2 1 2 0 2 1 2
+ 0 2 0 2 0 2 0 2 0 2 0 2 1 2 0 2 0 2 0 2 0 2 0 2 0 2 0 2 0 2 0 2 0 2 0 2 0
+ 2 0 2 0 2 0 2 0 2 0 2 0 2 0 2]
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+/usr/local/lib/python3.10/dist-packages/sklearn/cluster/\_agglomerative.py:983:
+FutureWarning: Attribute `affinity` was deprecated in version 1.2 and will be
+removed in 1.4. Use `metric` instead
+  warnings.warn(
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{30}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{plt}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{n}{x}\PY{p}{[}\PY{n}{y\PYZus{}hc} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}\PY{n}{x}\PY{p}{[}\PY{n}{y\PYZus{}hc} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,} \PY{n}{s}\PY{o}{=}\PY{l+m+mi}{100}\PY{p}{,} \PY{n}{c} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{red}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{label} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Clusters 1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{n}{x}\PY{p}{[}\PY{n}{y\PYZus{}hc} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}\PY{n}{x}\PY{p}{[}\PY{n}{y\PYZus{}hc} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,} \PY{n}{s}\PY{o}{=}\PY{l+m+mi}{100}\PY{p}{,} \PY{n}{c} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{blue}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{label} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Clusters 2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{n}{x}\PY{p}{[}\PY{n}{y\PYZus{}hc} \PY{o}{==} \PY{l+m+mi}{2}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}\PY{n}{x}\PY{p}{[}\PY{n}{y\PYZus{}hc} \PY{o}{==} \PY{l+m+mi}{2}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,} \PY{n}{s}\PY{o}{=}\PY{l+m+mi}{100}\PY{p}{,} \PY{n}{c} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{green}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{label} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Clusters 3}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{n}{x}\PY{p}{[}\PY{n}{y\PYZus{}hc} \PY{o}{==} \PY{l+m+mi}{3}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}\PY{n}{x}\PY{p}{[}\PY{n}{y\PYZus{}hc} \PY{o}{==} \PY{l+m+mi}{3}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,} \PY{n}{s}\PY{o}{=}\PY{l+m+mi}{100}\PY{p}{,} \PY{n}{c} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{cyan}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{label} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Clusters 4}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{n}{x}\PY{p}{[}\PY{n}{y\PYZus{}hc} \PY{o}{==} \PY{l+m+mi}{4}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}\PY{n}{x}\PY{p}{[}\PY{n}{y\PYZus{}hc} \PY{o}{==} \PY{l+m+mi}{4}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,} \PY{n}{s}\PY{o}{=}\PY{l+m+mi}{100}\PY{p}{,} \PY{n}{c} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{magenta}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{label} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Clusters 5}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Clusters of customers}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Annual income(k\PYZdl{})}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Spending Score (1 \PYZhy{} 100)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{legend}\PY{p}{(}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_107_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \section{Practical 08: Implement Artificial Neural
+Network}\label{practical-08-implement-artificial-neural-network}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+\PY{k+kn}{import} \PY{n+nn}{pandas} \PY{k}{as} \PY{n+nn}{pd}
+\PY{k+kn}{import} \PY{n+nn}{tensorflow} \PY{k}{as} \PY{n+nn}{tf}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{11}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{tf}\PY{o}{.}\PY{n}{\PYZus{}\PYZus{}version\PYZus{}\PYZus{}}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{11}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+'2.12.0'
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{12}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{dataset} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{/content/drive/MyDrive/MSC CS/SEM 3/1. Machine Learning \PYZam{} Deep Learning/Practicals/10. Artificial Neural Network (ANN)/Churn\PYZus{}Modelling.csv}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{x} \PY{o}{=} \PY{n}{dataset}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{l+m+mi}{3}\PY{p}{:}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{.}\PY{n}{values}
+\PY{n}{y} \PY{o}{=} \PY{n}{dataset}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{.}\PY{n}{values}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{13}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{x}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[[619 'France' 'Female' {\ldots} 1 1 101348.88]
+ [608 'Spain' 'Female' {\ldots} 0 1 112542.58]
+ [502 'France' 'Female' {\ldots} 1 0 113931.57]
+ {\ldots}
+ [709 'France' 'Female' {\ldots} 0 1 42085.58]
+ [772 'Germany' 'Male' {\ldots} 1 0 92888.52]
+ [792 'France' 'Female' {\ldots} 1 0 38190.78]]
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{14}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{y}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[1 0 1 {\ldots} 1 1 0]
+    \end{Verbatim}
+
+    \subsection{Encoding categorical data}\label{encoding-categorical-data}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{15}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{preprocessing} \PY{k+kn}{import} \PY{n}{LabelEncoder}
+\PY{n}{le} \PY{o}{=} \PY{n}{LabelEncoder}\PY{p}{(}\PY{p}{)}
+\PY{n}{x}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{]} \PY{o}{=} \PY{n}{le}\PY{o}{.}\PY{n}{fit\PYZus{}transform}\PY{p}{(}\PY{n}{x}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{]}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{16}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{x}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[[619 'France' 0 {\ldots} 1 1 101348.88]
+ [608 'Spain' 0 {\ldots} 0 1 112542.58]
+ [502 'France' 0 {\ldots} 1 0 113931.57]
+ {\ldots}
+ [709 'France' 0 {\ldots} 0 1 42085.58]
+ [772 'Germany' 1 {\ldots} 1 0 92888.52]
+ [792 'France' 0 {\ldots} 1 0 38190.78]]
+    \end{Verbatim}
+
+    \subsubsection{One Hot Encoding the ``Geography''
+column}\label{one-hot-encoding-the-geography-column}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{17}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{compose} \PY{k+kn}{import} \PY{n}{ColumnTransformer}
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{preprocessing} \PY{k+kn}{import} \PY{n}{OneHotEncoder}
+\PY{n}{ct} \PY{o}{=} \PY{n}{ColumnTransformer}\PY{p}{(}\PY{n}{transformers} \PY{o}{=} \PY{p}{[}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{encoder}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{OneHotEncoder}\PY{p}{(}\PY{p}{)}\PY{p}{,} \PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}\PY{p}{]}\PY{p}{,} \PY{n}{remainder} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{passthrough}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{x} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{n}{ct}\PY{o}{.}\PY{n}{fit\PYZus{}transform}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{18}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{x}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[[1.0 0.0 0.0 {\ldots} 1 1 101348.88]
+ [0.0 0.0 1.0 {\ldots} 0 1 112542.58]
+ [1.0 0.0 0.0 {\ldots} 1 0 113931.57]
+ {\ldots}
+ [1.0 0.0 0.0 {\ldots} 0 1 42085.58]
+ [0.0 1.0 0.0 {\ldots} 1 0 92888.52]
+ [1.0 0.0 0.0 {\ldots} 1 0 38190.78]]
+    \end{Verbatim}
+
+    \subsection{Splitting the dataset into the Training set and Test
+set}\label{splitting-the-dataset-into-the-training-set-and-test-set}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{19}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{model\PYZus{}selection} \PY{k+kn}{import} \PY{n}{train\PYZus{}test\PYZus{}split}
+\PY{n}{x\PYZus{}train}\PY{p}{,} \PY{n}{x\PYZus{}test}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}test} \PY{o}{=} \PY{n}{train\PYZus{}test\PYZus{}split}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{,} \PY{n}{test\PYZus{}size} \PY{o}{=} \PY{l+m+mf}{0.2}\PY{p}{,} \PY{n}{random\PYZus{}state} \PY{o}{=} \PY{l+m+mi}{0}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \subsection{Feature Scaling}\label{feature-scaling}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{20}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{preprocessing} \PY{k+kn}{import} \PY{n}{StandardScaler}
+\PY{n}{sc} \PY{o}{=} \PY{n}{StandardScaler}\PY{p}{(}\PY{p}{)}
+\PY{n}{x\PYZus{}train} \PY{o}{=} \PY{n}{sc}\PY{o}{.}\PY{n}{fit\PYZus{}transform}\PY{p}{(}\PY{n}{x\PYZus{}train}\PY{p}{)}
+\PY{n}{x\PYZus{}test} \PY{o}{=} \PY{n}{sc}\PY{o}{.}\PY{n}{transform}\PY{p}{(}\PY{n}{x\PYZus{}test}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \subsection{Part 2 - Building the ANN}\label{part-2---building-the-ann}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{21}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{ann} \PY{o}{=} \PY{n}{tf}\PY{o}{.}\PY{n}{keras}\PY{o}{.}\PY{n}{models}\PY{o}{.}\PY{n}{Sequential}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{22}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{ann}\PY{o}{.}\PY{n}{add}\PY{p}{(}\PY{n}{tf}\PY{o}{.}\PY{n}{keras}\PY{o}{.}\PY{n}{layers}\PY{o}{.}\PY{n}{Dense}\PY{p}{(}\PY{n}{units} \PY{o}{=} \PY{l+m+mi}{6}\PY{p}{,} \PY{n}{activation} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{relu}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{23}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{ann}\PY{o}{.}\PY{n}{add}\PY{p}{(}\PY{n}{tf}\PY{o}{.}\PY{n}{keras}\PY{o}{.}\PY{n}{layers}\PY{o}{.}\PY{n}{Dense}\PY{p}{(}\PY{n}{units} \PY{o}{=} \PY{l+m+mi}{6}\PY{p}{,} \PY{n}{activation} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{relu}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{24}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{ann}\PY{o}{.}\PY{n}{add}\PY{p}{(}\PY{n}{tf}\PY{o}{.}\PY{n}{keras}\PY{o}{.}\PY{n}{layers}\PY{o}{.}\PY{n}{Dense}\PY{p}{(}\PY{n}{units} \PY{o}{=} \PY{l+m+mi}{1}\PY{p}{,} \PY{n}{activation} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{sigmoid}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{25}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{ann}\PY{o}{.}\PY{n}{compile}\PY{p}{(}\PY{n}{optimizer} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{adam}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{loss} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{binary\PYZus{}crossentropy}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{metrics} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{accuracy}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{26}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{ann}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{x\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{,} \PY{n}{batch\PYZus{}size} \PY{o}{=} \PY{l+m+mi}{32}\PY{p}{,} \PY{n}{epochs} \PY{o}{=} \PY{l+m+mi}{100}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Epoch 1/100
+250/250 [==============================] - 3s 5ms/step - loss: 0.5950 -
+accuracy: 0.7820
+Epoch 2/100
+250/250 [==============================] - 1s 6ms/step - loss: 0.4888 -
+accuracy: 0.7960
+Epoch 3/100
+250/250 [==============================] - 2s 7ms/step - loss: 0.4501 -
+accuracy: 0.7960
+Epoch 4/100
+250/250 [==============================] - 2s 6ms/step - loss: 0.4315 -
+accuracy: 0.8005
+Epoch 5/100
+250/250 [==============================] - 2s 7ms/step - loss: 0.4202 -
+accuracy: 0.8058
+Epoch 6/100
+250/250 [==============================] - 2s 7ms/step - loss: 0.4119 -
+accuracy: 0.8146
+Epoch 7/100
+250/250 [==============================] - 1s 5ms/step - loss: 0.4044 -
+accuracy: 0.8221
+Epoch 8/100
+250/250 [==============================] - 1s 5ms/step - loss: 0.3968 -
+accuracy: 0.8270
+Epoch 9/100
+250/250 [==============================] - 1s 4ms/step - loss: 0.3892 -
+accuracy: 0.8319
+Epoch 10/100
+250/250 [==============================] - 0s 2ms/step - loss: 0.3823 -
+accuracy: 0.8374
+Epoch 11/100
+250/250 [==============================] - 0s 2ms/step - loss: 0.3758 -
+accuracy: 0.8424
+Epoch 12/100
+250/250 [==============================] - 0s 2ms/step - loss: 0.3700 -
+accuracy: 0.8436
+Epoch 13/100
+250/250 [==============================] - 1s 2ms/step - loss: 0.3651 -
+accuracy: 0.8481
+Epoch 14/100
+250/250 [==============================] - 0s 2ms/step - loss: 0.3616 -
+accuracy: 0.8480
+Epoch 15/100
+250/250 [==============================] - 0s 2ms/step - loss: 0.3586 -
+accuracy: 0.8509
+Epoch 16/100
+250/250 [==============================] - 0s 2ms/step - loss: 0.3566 -
+accuracy: 0.8512
+Epoch 17/100
+250/250 [==============================] - 1s 2ms/step - loss: 0.3549 -
+accuracy: 0.8519
+Epoch 18/100
+250/250 [==============================] - 1s 2ms/step - loss: 0.3538 -
+accuracy: 0.8524
+Epoch 19/100
+250/250 [==============================] - 1s 2ms/step - loss: 0.3525 -
+accuracy: 0.8530
+Epoch 20/100
+250/250 [==============================] - 1s 2ms/step - loss: 0.3518 -
+accuracy: 0.8534
+Epoch 21/100
+250/250 [==============================] - 1s 2ms/step - loss: 0.3509 -
+accuracy: 0.8543
+Epoch 22/100
+250/250 [==============================] - 1s 2ms/step - loss: 0.3503 -
+accuracy: 0.8553
+Epoch 23/100
+250/250 [==============================] - 1s 2ms/step - loss: 0.3497 -
+accuracy: 0.8544
+Epoch 24/100
+250/250 [==============================] - 1s 3ms/step - loss: 0.3491 -
+accuracy: 0.8560
+Epoch 25/100
+250/250 [==============================] - 1s 3ms/step - loss: 0.3483 -
+accuracy: 0.8561
+Epoch 26/100
+250/250 [==============================] - 1s 3ms/step - loss: 0.3478 -
+accuracy: 0.8572
+Epoch 27/100
+250/250 [==============================] - 1s 3ms/step - loss: 0.3475 -
+accuracy: 0.8571
+Epoch 28/100
+250/250 [==============================] - 1s 3ms/step - loss: 0.3468 -
+accuracy: 0.8596
+Epoch 29/100
+250/250 [==============================] - 1s 3ms/step - loss: 0.3461 -
+accuracy: 0.8576
+Epoch 30/100
+250/250 [==============================] - 1s 3ms/step - loss: 0.3459 -
+accuracy: 0.8579
+Epoch 31/100
+250/250 [==============================] - 1s 3ms/step - loss: 0.3456 -
+accuracy: 0.8602
+Epoch 32/100
+250/250 [==============================] - 1s 2ms/step - loss: 0.3453 -
+accuracy: 0.8589
+Epoch 33/100
+250/250 [==============================] - 0s 2ms/step - loss: 0.3448 -
+accuracy: 0.8597
+Epoch 34/100
+250/250 [==============================] - 1s 2ms/step - loss: 0.3444 -
+accuracy: 0.8596
+Epoch 35/100
+250/250 [==============================] - 0s 2ms/step - loss: 0.3439 -
+accuracy: 0.8591
+Epoch 36/100
+250/250 [==============================] - 0s 2ms/step - loss: 0.3438 -
+accuracy: 0.8597
+Epoch 37/100
+250/250 [==============================] - 1s 2ms/step - loss: 0.3431 -
+accuracy: 0.8586
+Epoch 38/100
+250/250 [==============================] - 1s 2ms/step - loss: 0.3429 -
+accuracy: 0.8605
+Epoch 39/100
+250/250 [==============================] - 0s 2ms/step - loss: 0.3425 -
+accuracy: 0.8597
+Epoch 40/100
+250/250 [==============================] - 0s 2ms/step - loss: 0.3424 -
+accuracy: 0.8610
+Epoch 41/100
+250/250 [==============================] - 0s 2ms/step - loss: 0.3421 -
+accuracy: 0.8590
+Epoch 42/100
+250/250 [==============================] - 0s 2ms/step - loss: 0.3420 -
+accuracy: 0.8595
+Epoch 43/100
+250/250 [==============================] - 1s 2ms/step - loss: 0.3415 -
+accuracy: 0.8602
+Epoch 44/100
+250/250 [==============================] - 0s 2ms/step - loss: 0.3414 -
+accuracy: 0.8608
+Epoch 45/100
+250/250 [==============================] - 0s 2ms/step - loss: 0.3407 -
+accuracy: 0.8604
+Epoch 46/100
+250/250 [==============================] - 0s 2ms/step - loss: 0.3406 -
+accuracy: 0.8596
+Epoch 47/100
+250/250 [==============================] - 0s 2ms/step - loss: 0.3402 -
+accuracy: 0.8610
+Epoch 48/100
+250/250 [==============================] - 0s 2ms/step - loss: 0.3403 -
+accuracy: 0.8611
+Epoch 49/100
+250/250 [==============================] - 1s 2ms/step - loss: 0.3399 -
+accuracy: 0.8639
+Epoch 50/100
+250/250 [==============================] - 1s 2ms/step - loss: 0.3394 -
+accuracy: 0.8631
+Epoch 51/100
+250/250 [==============================] - 1s 2ms/step - loss: 0.3390 -
+accuracy: 0.8622
+Epoch 52/100
+250/250 [==============================] - 1s 2ms/step - loss: 0.3390 -
+accuracy: 0.8622
+Epoch 53/100
+250/250 [==============================] - 1s 3ms/step - loss: 0.3384 -
+accuracy: 0.8616
+Epoch 54/100
+250/250 [==============================] - 1s 3ms/step - loss: 0.3385 -
+accuracy: 0.8618
+Epoch 55/100
+250/250 [==============================] - 1s 3ms/step - loss: 0.3381 -
+accuracy: 0.8619
+Epoch 56/100
+250/250 [==============================] - 1s 3ms/step - loss: 0.3379 -
+accuracy: 0.8629
+Epoch 57/100
+250/250 [==============================] - 1s 3ms/step - loss: 0.3375 -
+accuracy: 0.8624
+Epoch 58/100
+250/250 [==============================] - 1s 3ms/step - loss: 0.3381 -
+accuracy: 0.8614
+Epoch 59/100
+250/250 [==============================] - 1s 2ms/step - loss: 0.3375 -
+accuracy: 0.8624
+Epoch 60/100
+250/250 [==============================] - 1s 2ms/step - loss: 0.3372 -
+accuracy: 0.8625
+Epoch 61/100
+250/250 [==============================] - 1s 2ms/step - loss: 0.3370 -
+accuracy: 0.8621
+Epoch 62/100
+250/250 [==============================] - 1s 2ms/step - loss: 0.3369 -
+accuracy: 0.8630
+Epoch 63/100
+250/250 [==============================] - 0s 2ms/step - loss: 0.3365 -
+accuracy: 0.8627
+Epoch 64/100
+250/250 [==============================] - 0s 2ms/step - loss: 0.3363 -
+accuracy: 0.8621
+Epoch 65/100
+250/250 [==============================] - 0s 2ms/step - loss: 0.3361 -
+accuracy: 0.8620
+Epoch 66/100
+250/250 [==============================] - 1s 2ms/step - loss: 0.3360 -
+accuracy: 0.8614
+Epoch 67/100
+250/250 [==============================] - 0s 2ms/step - loss: 0.3356 -
+accuracy: 0.8644
+Epoch 68/100
+250/250 [==============================] - 0s 2ms/step - loss: 0.3359 -
+accuracy: 0.8610
+Epoch 69/100
+250/250 [==============================] - 1s 4ms/step - loss: 0.3355 -
+accuracy: 0.8639
+Epoch 70/100
+250/250 [==============================] - 1s 3ms/step - loss: 0.3355 -
+accuracy: 0.8635
+Epoch 71/100
+250/250 [==============================] - 1s 3ms/step - loss: 0.3354 -
+accuracy: 0.8633
+Epoch 72/100
+250/250 [==============================] - 1s 2ms/step - loss: 0.3354 -
+accuracy: 0.8627
+Epoch 73/100
+250/250 [==============================] - 1s 2ms/step - loss: 0.3352 -
+accuracy: 0.8636
+Epoch 74/100
+250/250 [==============================] - 1s 2ms/step - loss: 0.3352 -
+accuracy: 0.8629
+Epoch 75/100
+250/250 [==============================] - 1s 2ms/step - loss: 0.3350 -
+accuracy: 0.8634
+Epoch 76/100
+250/250 [==============================] - 1s 4ms/step - loss: 0.3350 -
+accuracy: 0.8641
+Epoch 77/100
+250/250 [==============================] - 1s 5ms/step - loss: 0.3347 -
+accuracy: 0.8643
+Epoch 78/100
+250/250 [==============================] - 1s 4ms/step - loss: 0.3347 -
+accuracy: 0.8651
+Epoch 79/100
+250/250 [==============================] - 1s 4ms/step - loss: 0.3346 -
+accuracy: 0.8637
+Epoch 80/100
+250/250 [==============================] - 1s 3ms/step - loss: 0.3344 -
+accuracy: 0.8626
+Epoch 81/100
+250/250 [==============================] - 1s 3ms/step - loss: 0.3346 -
+accuracy: 0.8629
+Epoch 82/100
+250/250 [==============================] - 1s 3ms/step - loss: 0.3343 -
+accuracy: 0.8646
+Epoch 83/100
+250/250 [==============================] - 1s 3ms/step - loss: 0.3344 -
+accuracy: 0.8646
+Epoch 84/100
+250/250 [==============================] - 1s 2ms/step - loss: 0.3341 -
+accuracy: 0.8652
+Epoch 85/100
+250/250 [==============================] - 0s 2ms/step - loss: 0.3347 -
+accuracy: 0.8649
+Epoch 86/100
+250/250 [==============================] - 0s 2ms/step - loss: 0.3343 -
+accuracy: 0.8646
+Epoch 87/100
+250/250 [==============================] - 0s 2ms/step - loss: 0.3341 -
+accuracy: 0.8641
+Epoch 88/100
+250/250 [==============================] - 1s 2ms/step - loss: 0.3346 -
+accuracy: 0.8633
+Epoch 89/100
+250/250 [==============================] - 0s 2ms/step - loss: 0.3340 -
+accuracy: 0.8637
+Epoch 90/100
+250/250 [==============================] - 0s 2ms/step - loss: 0.3342 -
+accuracy: 0.8650
+Epoch 91/100
+250/250 [==============================] - 0s 2ms/step - loss: 0.3341 -
+accuracy: 0.8636
+Epoch 92/100
+250/250 [==============================] - 0s 2ms/step - loss: 0.3340 -
+accuracy: 0.8641
+Epoch 93/100
+250/250 [==============================] - 0s 2ms/step - loss: 0.3342 -
+accuracy: 0.8660
+Epoch 94/100
+250/250 [==============================] - 0s 2ms/step - loss: 0.3338 -
+accuracy: 0.8652
+Epoch 95/100
+250/250 [==============================] - 0s 2ms/step - loss: 0.3340 -
+accuracy: 0.8643
+Epoch 96/100
+250/250 [==============================] - 0s 2ms/step - loss: 0.3336 -
+accuracy: 0.8641
+Epoch 97/100
+250/250 [==============================] - 0s 2ms/step - loss: 0.3342 -
+accuracy: 0.8640
+Epoch 98/100
+250/250 [==============================] - 0s 2ms/step - loss: 0.3340 -
+accuracy: 0.8639
+Epoch 99/100
+250/250 [==============================] - 0s 2ms/step - loss: 0.3339 -
+accuracy: 0.8630
+Epoch 100/100
+250/250 [==============================] - 1s 2ms/step - loss: 0.3339 -
+accuracy: 0.8644
+    \end{Verbatim}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{26}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+<keras.callbacks.History at 0x7c19386b3f40>
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{27}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{ann}\PY{o}{.}\PY{n}{predict}\PY{p}{(}\PY{n}{sc}\PY{o}{.}\PY{n}{transform}\PY{p}{(}\PY{p}{[}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{600}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{40}\PY{p}{,} \PY{l+m+mi}{3}\PY{p}{,} \PY{l+m+mi}{60000}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{50000}\PY{p}{]}\PY{p}{]}\PY{p}{)}\PY{p}{)} \PY{o}{\PYZgt{}}\PY{l+m+mf}{0.5}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+1/1 [==============================] - 0s 238ms/step
+[[False]]
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{28}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{y\PYZus{}pred} \PY{o}{=} \PY{n}{ann}\PY{o}{.}\PY{n}{predict}\PY{p}{(}\PY{n}{x\PYZus{}test}\PY{p}{)}
+\PY{n}{y\PYZus{}pred} \PY{o}{=} \PY{p}{(}\PY{n}{y\PYZus{}pred} \PY{o}{\PYZgt{}} \PY{l+m+mf}{0.5}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{concatenate}\PY{p}{(}\PY{p}{(}\PY{n}{y\PYZus{}pred}\PY{o}{.}\PY{n}{reshape}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{y\PYZus{}pred}\PY{p}{)}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{,} \PY{n}{y\PYZus{}test}\PY{o}{.}\PY{n}{reshape}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{y\PYZus{}test}\PY{p}{)}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{)}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+63/63 [==============================] - 0s 2ms/step
+[[0 0]
+ [0 1]
+ [0 0]
+ {\ldots}
+ [0 0]
+ [0 0]
+ [0 0]]
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{29}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{metrics} \PY{k+kn}{import} \PY{n}{confusion\PYZus{}matrix}\PY{p}{,} \PY{n}{accuracy\PYZus{}score}
+\PY{n}{cm} \PY{o}{=} \PY{n}{confusion\PYZus{}matrix}\PY{p}{(}\PY{n}{y\PYZus{}test}\PY{p}{,} \PY{n}{y\PYZus{}pred}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{cm}\PY{p}{)}
+\PY{n}{accuracy\PYZus{}score}\PY{p}{(}\PY{n}{y\PYZus{}test}\PY{p}{,} \PY{n}{y\PYZus{}pred}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[[1527   68]
+ [ 205  200]]
+    \end{Verbatim}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{29}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+0.8635
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+    \section{Practical 09: Cat vs Dog classification using Convolution
+neural
+network}\label{practical-09-cat-vs-dog-classification-using-convolution-neural-network}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import} \PY{n+nn}{tensorflow} \PY{k}{as} \PY{n+nn}{tf}
+\PY{k+kn}{from} \PY{n+nn}{keras}\PY{n+nn}{.}\PY{n+nn}{preprocessing}\PY{n+nn}{.}\PY{n+nn}{image} \PY{k+kn}{import} \PY{n}{ImageDataGenerator} \PY{k}{as} \PY{n}{IDG}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{tf}\PY{o}{.}\PY{n}{\PYZus{}\PYZus{}version\PYZus{}\PYZus{}}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+'2.12.0'
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{train\PYZus{}datagen} \PY{o}{=}\PY{n}{IDG}\PY{p}{(}\PY{n}{rescale} \PY{o}{=} \PY{l+m+mf}{1.}\PY{o}{/}\PY{l+m+mi}{255}\PY{p}{,}
+                   \PY{n}{shear\PYZus{}range} \PY{o}{=} \PY{l+m+mf}{0.2}\PY{p}{,}
+                   \PY{n}{zoom\PYZus{}range} \PY{o}{=} \PY{l+m+mf}{0.2}\PY{p}{,}
+                   \PY{n}{horizontal\PYZus{}flip}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+\PY{n}{training\PYZus{}set} \PY{o}{=} \PY{n}{train\PYZus{}datagen}\PY{o}{.}\PY{n}{flow\PYZus{}from\PYZus{}directory}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{/content/drive/MyDrive/MSC CS/SEM 3/1. Machine Learning \PYZam{} Deep Learning/Practicals/11. Convolutional Neural Network (CNN)/small\PYZus{}dataset/training\PYZus{}set}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+                                            \PY{n}{target\PYZus{}size} \PY{o}{=} \PY{p}{(}\PY{l+m+mi}{64}\PY{p}{,}\PY{l+m+mi}{64}\PY{p}{)}\PY{p}{,}
+                                            \PY{n}{batch\PYZus{}size} \PY{o}{=} \PY{l+m+mi}{32}\PY{p}{,}
+                                            \PY{n}{class\PYZus{}mode} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{binary}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Found 10 images belonging to 2 classes.
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{test\PYZus{}datagen} \PY{o}{=} \PY{n}{IDG}\PY{p}{(}\PY{n}{rescale} \PY{o}{=} \PY{l+m+mf}{1.}\PY{o}{/}\PY{l+m+mi}{255}\PY{p}{)}
+\PY{n}{test\PYZus{}set} \PY{o}{=} \PY{n}{test\PYZus{}datagen}\PY{o}{.}\PY{n}{flow\PYZus{}from\PYZus{}directory}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{/content/drive/MyDrive/MSC CS/SEM 3/1. Machine Learning \PYZam{} Deep Learning/Practicals/11. Convolutional Neural Network (CNN)/small\PYZus{}dataset/test\PYZus{}set}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+                                            \PY{n}{target\PYZus{}size}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{64}\PY{p}{,}\PY{l+m+mi}{64}\PY{p}{)}\PY{p}{,}
+                                            \PY{n}{batch\PYZus{}size}\PY{o}{=}\PY{l+m+mi}{32}\PY{p}{,}
+                                            \PY{n}{class\PYZus{}mode} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{binary}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Found 10 images belonging to 2 classes.
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{cnn} \PY{o}{=} \PY{n}{tf}\PY{o}{.}\PY{n}{keras}\PY{o}{.}\PY{n}{models}\PY{o}{.}\PY{n}{Sequential}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{cnn}\PY{o}{.}\PY{n}{add}\PY{p}{(}\PY{n}{tf}\PY{o}{.}\PY{n}{keras}\PY{o}{.}\PY{n}{layers}\PY{o}{.}\PY{n}{Conv2D}\PY{p}{(}\PY{n}{filters} \PY{o}{=} \PY{l+m+mi}{32}\PY{p}{,} \PY{n}{kernel\PYZus{}size} \PY{o}{=} \PY{l+m+mi}{3}\PY{p}{,} \PY{n}{activation} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{relu}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{input\PYZus{}shape} \PY{o}{=} \PY{p}{(}\PY{l+m+mi}{64}\PY{p}{,}\PY{l+m+mi}{64}\PY{p}{,}\PY{l+m+mi}{3}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{cnn}\PY{o}{.}\PY{n}{add}\PY{p}{(}\PY{n}{tf}\PY{o}{.}\PY{n}{keras}\PY{o}{.}\PY{n}{layers}\PY{o}{.}\PY{n}{MaxPool2D}\PY{p}{(}\PY{n}{pool\PYZus{}size} \PY{o}{=} \PY{l+m+mi}{2}\PY{p}{,} \PY{n}{strides} \PY{o}{=} \PY{l+m+mi}{2}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{cnn}\PY{o}{.}\PY{n}{add}\PY{p}{(}\PY{n}{tf}\PY{o}{.}\PY{n}{keras}\PY{o}{.}\PY{n}{layers}\PY{o}{.}\PY{n}{Conv2D}\PY{p}{(}\PY{n}{filters} \PY{o}{=} \PY{l+m+mi}{32}\PY{p}{,} \PY{n}{kernel\PYZus{}size} \PY{o}{=} \PY{l+m+mi}{3}\PY{p}{,} \PY{n}{activation} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{relu}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{)}
+\PY{n}{cnn}\PY{o}{.}\PY{n}{add}\PY{p}{(}\PY{n}{tf}\PY{o}{.}\PY{n}{keras}\PY{o}{.}\PY{n}{layers}\PY{o}{.}\PY{n}{MaxPool2D}\PY{p}{(}\PY{n}{pool\PYZus{}size} \PY{o}{=} \PY{l+m+mi}{2}\PY{p}{,} \PY{n}{strides} \PY{o}{=} \PY{l+m+mi}{2}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{cnn}\PY{o}{.}\PY{n}{add}\PY{p}{(}\PY{n}{tf}\PY{o}{.}\PY{n}{keras}\PY{o}{.}\PY{n}{layers}\PY{o}{.}\PY{n}{Flatten}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{cnn}\PY{o}{.}\PY{n}{add}\PY{p}{(}\PY{n}{tf}\PY{o}{.}\PY{n}{keras}\PY{o}{.}\PY{n}{layers}\PY{o}{.}\PY{n}{Dense}\PY{p}{(}\PY{n}{units} \PY{o}{=} \PY{l+m+mi}{128}\PY{p}{,} \PY{n}{activation} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{relu}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{cnn}\PY{o}{.}\PY{n}{add}\PY{p}{(}\PY{n}{tf}\PY{o}{.}\PY{n}{keras}\PY{o}{.}\PY{n}{layers}\PY{o}{.}\PY{n}{Dense}\PY{p}{(}\PY{n}{units} \PY{o}{=} \PY{l+m+mi}{1}\PY{p}{,} \PY{n}{activation} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{sigmoid}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{cnn}\PY{o}{.}\PY{n}{compile}\PY{p}{(}\PY{n}{optimizer} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{adam}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{loss} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{binary\PYZus{}crossentropy}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{metrics} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{accuracy}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{cnn}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{x} \PY{o}{=} \PY{n}{training\PYZus{}set}\PY{p}{,} \PY{n}{validation\PYZus{}data}\PY{o}{=}\PY{n}{test\PYZus{}set}\PY{p}{,}\PY{n}{epochs} \PY{o}{=} \PY{l+m+mi}{25}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Epoch 1/25
+1/1 [==============================] - 4s 4s/step - loss: 0.7091 - accuracy:
+0.3000 - val\_loss: 0.7031 - val\_accuracy: 0.5000
+Epoch 2/25
+1/1 [==============================] - 0s 146ms/step - loss: 0.6483 - accuracy:
+0.5000 - val\_loss: 1.0494 - val\_accuracy: 0.5000
+Epoch 3/25
+1/1 [==============================] - 0s 132ms/step - loss: 0.9677 - accuracy:
+0.5000 - val\_loss: 0.7256 - val\_accuracy: 0.5000
+Epoch 4/25
+1/1 [==============================] - 0s 138ms/step - loss: 0.5912 - accuracy:
+0.6000 - val\_loss: 0.7697 - val\_accuracy: 0.5000
+Epoch 5/25
+1/1 [==============================] - 0s 134ms/step - loss: 0.6717 - accuracy:
+0.5000 - val\_loss: 0.7872 - val\_accuracy: 0.5000
+Epoch 6/25
+1/1 [==============================] - 0s 151ms/step - loss: 0.6907 - accuracy:
+0.5000 - val\_loss: 0.7485 - val\_accuracy: 0.3000
+Epoch 7/25
+1/1 [==============================] - 0s 133ms/step - loss: 0.5686 - accuracy:
+0.6000 - val\_loss: 0.7458 - val\_accuracy: 0.4000
+Epoch 8/25
+1/1 [==============================] - 0s 138ms/step - loss: 0.5452 - accuracy:
+0.9000 - val\_loss: 0.7798 - val\_accuracy: 0.5000
+Epoch 9/25
+1/1 [==============================] - 0s 135ms/step - loss: 0.5628 - accuracy:
+0.6000 - val\_loss: 0.7959 - val\_accuracy: 0.5000
+Epoch 10/25
+1/1 [==============================] - 0s 136ms/step - loss: 0.5208 - accuracy:
+0.8000 - val\_loss: 0.7930 - val\_accuracy: 0.5000
+Epoch 11/25
+1/1 [==============================] - 0s 129ms/step - loss: 0.5094 - accuracy:
+0.8000 - val\_loss: 0.7977 - val\_accuracy: 0.3000
+Epoch 12/25
+1/1 [==============================] - 0s 135ms/step - loss: 0.4396 - accuracy:
+0.9000 - val\_loss: 0.8243 - val\_accuracy: 0.3000
+Epoch 13/25
+1/1 [==============================] - 0s 136ms/step - loss: 0.4396 - accuracy:
+0.8000 - val\_loss: 0.8532 - val\_accuracy: 0.3000
+Epoch 14/25
+1/1 [==============================] - 0s 131ms/step - loss: 0.3826 - accuracy:
+0.8000 - val\_loss: 0.8776 - val\_accuracy: 0.3000
+Epoch 15/25
+1/1 [==============================] - 0s 128ms/step - loss: 0.4714 - accuracy:
+0.9000 - val\_loss: 0.9454 - val\_accuracy: 0.7000
+Epoch 16/25
+1/1 [==============================] - 0s 156ms/step - loss: 0.3074 - accuracy:
+0.9000 - val\_loss: 0.9897 - val\_accuracy: 0.7000
+Epoch 17/25
+1/1 [==============================] - 0s 132ms/step - loss: 0.3913 - accuracy:
+0.8000 - val\_loss: 1.0137 - val\_accuracy: 0.4000
+Epoch 18/25
+1/1 [==============================] - 0s 136ms/step - loss: 0.2495 - accuracy:
+1.0000 - val\_loss: 1.0508 - val\_accuracy: 0.3000
+Epoch 19/25
+1/1 [==============================] - 0s 133ms/step - loss: 0.2436 - accuracy:
+1.0000 - val\_loss: 1.1137 - val\_accuracy: 0.3000
+Epoch 20/25
+1/1 [==============================] - 0s 135ms/step - loss: 0.2296 - accuracy:
+1.0000 - val\_loss: 1.1719 - val\_accuracy: 0.4000
+Epoch 21/25
+1/1 [==============================] - 0s 145ms/step - loss: 0.2185 - accuracy:
+1.0000 - val\_loss: 1.2464 - val\_accuracy: 0.4000
+Epoch 22/25
+1/1 [==============================] - 0s 136ms/step - loss: 0.2822 - accuracy:
+0.9000 - val\_loss: 1.3149 - val\_accuracy: 0.4000
+Epoch 23/25
+1/1 [==============================] - 0s 133ms/step - loss: 0.2895 - accuracy:
+0.9000 - val\_loss: 1.4116 - val\_accuracy: 0.4000
+Epoch 24/25
+1/1 [==============================] - 0s 135ms/step - loss: 0.2046 - accuracy:
+1.0000 - val\_loss: 1.4139 - val\_accuracy: 0.2000
+Epoch 25/25
+1/1 [==============================] - 0s 132ms/step - loss: 0.0799 - accuracy:
+1.0000 - val\_loss: 1.6286 - val\_accuracy: 0.3000
+    \end{Verbatim}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+<keras.callbacks.History at 0x7929b4bd3310>
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+\PY{k+kn}{from} \PY{n+nn}{tensorflow}\PY{n+nn}{.}\PY{n+nn}{keras}\PY{n+nn}{.}\PY{n+nn}{preprocessing} \PY{k+kn}{import} \PY{n}{image}
+\PY{n}{test\PYZus{}image} \PY{o}{=} \PY{n}{image}\PY{o}{.}\PY{n}{load\PYZus{}img}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{/content/drive/MyDrive/MSC CS/SEM 3/1. Machine Learning \PYZam{} Deep Learning/Practicals/11. Convolutional Neural Network (CNN)/small\PYZus{}dataset/single\PYZus{}prediction/cat\PYZus{}or\PYZus{}dog\PYZus{}2.jpg}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{target\PYZus{}size} \PY{o}{=} \PY{p}{(}\PY{l+m+mi}{64}\PY{p}{,}\PY{l+m+mi}{64}\PY{p}{)}\PY{p}{)}
+\PY{n}{test\PYZus{}image} \PY{o}{=} \PY{n}{image}\PY{o}{.}\PY{n}{img\PYZus{}to\PYZus{}array}\PY{p}{(}\PY{n}{test\PYZus{}image}\PY{p}{)}
+\PY{n}{test\PYZus{}image} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{expand\PYZus{}dims}\PY{p}{(}\PY{n}{test\PYZus{}image}\PY{p}{,}\PY{n}{axis} \PY{o}{=} \PY{l+m+mi}{0}\PY{p}{)}
+\PY{n}{result} \PY{o}{=} \PY{n}{cnn}\PY{o}{.}\PY{n}{predict}\PY{p}{(}\PY{n}{test\PYZus{}image}\PY{p}{)}
+\PY{n}{training\PYZus{}set}\PY{o}{.}\PY{n}{class\PYZus{}indices}
+\PY{k}{if} \PY{n}{result}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{:}
+  \PY{n}{prediction} \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Dog}\PY{l+s+s2}{\PYZdq{}}
+\PY{k}{else}\PY{p}{:}
+  \PY{n}{prediction} \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Cat}\PY{l+s+s2}{\PYZdq{}}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+1/1 [==============================] - 0s 17ms/step
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{prediction}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Cat
+    \end{Verbatim}
+
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+\end{document}
